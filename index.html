@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Chart - Fixed Precip Labels</title>
+    <title>Weather Chart - All Labels Visible</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <style>
@@ -21,7 +21,6 @@
         const ctx = document.getElementById('weatherChart').getContext('2d');
         let chart;
 
-        // Register plugin FIRST
         Chart.register(ChartDataLabels);
 
         async function loadWeatherChart() {
@@ -47,6 +46,7 @@
                     data: {
                         labels: labels,
                         datasets: [{
+                            // Temperature - CLEAR red labels above points
                             type: 'line',
                             label: 'Temperature (°C)',
                             data: temps,
@@ -57,30 +57,38 @@
                             tension: 0.4,
                             yAxisID: 'y',
                             datalabels: {
-                                color: 'rgb(255, 99, 132)',
+                                color: '#d63384',  // Darker red for visibility
                                 font: { weight: 'bold', size: 12 },
-                                formatter: (value) => value.toFixed(1)
+                                formatter: (value) => value.toFixed(1),
+                                anchor: 'end',
+                                align: 'top',
+                                offset: 6,
+                                backgroundColor: 'rgba(255,255,255,0.9)',
+                                borderRadius: 3,
+                                padding: 2
                             }
                         }, {
+                            // Precipitation - Black labels with white box above bars
                             type: 'bar',
                             label: 'Precipitation (mm)',
                             data: precip,
-                            backgroundColor: 'rgba(54, 162, 235, 0.9)',  // Darker blue
+                            backgroundColor: 'rgba(54, 162, 235, 0.9)',
                             yAxisID: 'y1',
                             barPercentage: 0.6,
                             categoryPercentage: 0.4,
                             datalabels: {
-                                color: '#000',  // BLACK text for visibility
+                                color: '#000',
                                 font: { weight: 'bold', size: 12 },
                                 formatter: (value) => value.toFixed(1),
                                 anchor: 'end',
                                 align: 'top',
                                 offset: 4,
-                                backgroundColor: 'rgba(255,255,255,0.8)',  // White background
+                                backgroundColor: 'rgba(255,255,255,0.9)',
                                 borderRadius: 3,
                                 padding: 2
                             }
                         }, {
+                            // Wind speed - CLEAR teal labels above points
                             type: 'line',
                             label: 'Wind Speed (km/h)',
                             data: windSpeed,
@@ -91,9 +99,15 @@
                             tension: 0.4,
                             yAxisID: 'y1',
                             datalabels: {
-                                color: 'rgb(75, 192, 192)',
+                                color: '#0d9488',  // Darker teal for visibility
                                 font: { weight: 'bold', size: 12 },
-                                formatter: (value) => value.toFixed(0)
+                                formatter: (value) => value.toFixed(0),
+                                anchor: 'end',
+                                align: 'top',
+                                offset: 6,
+                                backgroundColor: 'rgba(255,255,255,0.9)',
+                                borderRadius: 3,
+                                padding: 2
                             }
                         }]
                     },
@@ -102,7 +116,7 @@
                         maintainAspectRatio: false,
                         layout: {
                             padding: {
-                                top: 50
+                                top: 60  // Extra space for all labels
                             }
                         },
                         plugins: {
@@ -133,7 +147,7 @@
                             }
                         }
                     },
-                    plugins: [ChartDataLabels]  // Explicit plugin registration
+                    plugins: [ChartDataLabels]
                 });
             } catch (error) {
                 console.error('Chart load error:', error);
