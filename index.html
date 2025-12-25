@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Chart - Individual Data Labels</title>
+    <title>Weather Chart - Proper Scaling</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <style>
@@ -21,7 +21,6 @@
         const ctx = document.getElementById('weatherChart').getContext('2d');
         let chart;
 
-        // Register data labels plugin
         Chart.register(ChartDataLabels);
 
         async function loadWeatherChart() {
@@ -31,12 +30,16 @@
                 const data = await response.json();
 
                 // Extract next 4 hours
-                const now = new Date();
                 const times = data.hourly.time.slice(0, 4);
                 const labels = times.map(t => new Date(t).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
                 const temps = data.hourly.temperature_2m.slice(0, 4);
                 const precip = data.hourly.precipitation.slice(0, 4);
                 const windSpeed = data.hourly.windspeed_10m.slice(0, 4);
+
+                // Calculate dynamic ranges based on actual data
+                const tempMin = Math.min(...temps) - 2;
+                const tempMax = Math.max(...temps) + 2;
+                const windMax = Math.max(...windSpeed, ...precip) + 5;
 
                 if (chart) chart.destroy();
 
@@ -45,7 +48,6 @@
                     data: {
                         labels: labels,
                         datasets: [{
-                            // Temperature line - label above points
                             type: 'line',
                             label: 'Temperature (°C)',
                             data: temps,
@@ -64,14 +66,13 @@
                                 offset: 4
                             }
                         }, {
-                            // Precipitation bars - label above bars
                             type: 'bar',
                             label: 'Precipitation (mm)',
                             data: precip,
                             backgroundColor: 'rgba(54, 162, 235, 0.8)',
                             yAxisID: 'y1',
                             datalabels: {
-                                color: 'rgb(54, 162, 235)',
+                                color: 'white',
                                 font: { weight: 'bold', size: 12 },
                                 formatter: (value) => value > 0 ? value.toFixed(1) + 'mm' : '',
                                 anchor: 'end',
@@ -79,7 +80,6 @@
                                 offset: 4
                             }
                         }, {
-                            // Wind speed line - label above points
                             type: 'line',
                             label: 'Wind Speed (km/h)',
                             data: windSpeed,
@@ -101,13 +101,17 @@
                     },
                     options: {
                         responsive: true,
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: {
+                                top: 30,  // Extra space for labels
+                                bottom: 20
+                            }
+                        },
                         plugins: {
                             legend: { 
                                 display: true,
                                 position: 'top'
-                            },
-                            datalabels: {
-                                display: true
                             }
                         },
                         interaction: {
@@ -116,18 +120,20 @@
                         },
                         scales: {
                             x: { 
-                                display: true,  // Keep time labels visible
+                                display: true,
                                 grid: { display: false }
                             },
                             y: { 
-                                display: false,  // NO Y-axis display
-                                beginAtZero: true,
-                                max: 40  // Reasonable temp range
+                                display: false,
+                                min: tempMin,
+                                max: tempMax,
+                                beginAtZero: false  // Allow negative temps
                             },
                             y1: { 
-                                display: false,  // NO secondary Y-axis display
-                                beginAtZero: true,
-                                max: 50  // Reasonable precip/wind range
+                                display: false,
+                                min: 0,
+                                max: windMax,
+                                beginAtZero: true
                             }
                         }
                     }
