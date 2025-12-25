@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <style>
         body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; }
-        #weatherChart { max-height: 400px; }
+        #weatherChart { max-height: 400px; max-width: 300px;}
     </style>
 </head>
 <body>
@@ -99,7 +99,7 @@
                             barPercentage: 0.6,
                             categoryPercentage: 0.4,
                             datalabels: {
-                                color: '#000',
+                                color: 'darkblue',
                                 font: { weight: 'bold', size: 12 },
                                 formatter: (value) => value.toFixed(1),
                                 anchor: 'end',
@@ -143,7 +143,7 @@
                         maintainAspectRatio: false,
                         layout: {
                             padding: {
-                                top: 60  // Extra space for all labels
+                                top: 40  // Extra space for all labels
                             }
                         },
                         plugins: {
