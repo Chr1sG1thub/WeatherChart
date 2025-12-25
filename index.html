@@ -12,19 +12,17 @@
     </style>
 </head>
 <body>
-    <!--<h1>6-Hour Weather Forecast Chart</h1>-->
     <canvas id="weatherChart"></canvas>
 
     <script>
         const lat = 42.656854;  // Latitude
         const lon = 2.585727;   // Longitude
-
         const sundayMorning = new Date("December 27, 2025 07:00:00");
 
-    function degToCompass(deg) {
-    const dirs = ['⬇️', '↙️', '⬅️', '↖️', '⬆️', '↗️', '➡️', '↘️'];
-    return dirs[Math.round(deg / 45) % 8];
-    }
+        function degToCompass(deg) {
+            const dirs = ['⬇️', '↙️', '⬅️', '↖️', '⬆️', '↗️', '➡️', '↘️'];
+            return dirs[Math.round(deg / 45) % 8];
+        }
 
         const ctx = document.getElementById('weatherChart').getContext('2d');
         let chart;
@@ -37,21 +35,23 @@
                 const response = await fetch(url);
                 const data = await response.json();
 
-                let times = [];
-                let temps = [];
-                let precip = [];
-                let windSpeed = [];
-                let windDir = [];
+                // ✅ FIXED: Initialize arrays properly
+                const times = [];
+                const temps = [];
+                const precip = [];
+                const windSpeed = [];
+                const windDir = [];
 
-                for (let i = 0, j = 0; j < 6 && i < data.hourly.time.length; i++) {
+                let j = 0;
+                for (let i = 0; j < 6 && i < data.hourly.time.length; i++) {
                     const time = new Date(data.hourly.time[i]);
-                    if (time >= sundayMorning) {  // Only future hours
-                times[j] = data.hourly.time[i];
-                temps[j] = data.hourly.temperature_2m[i];
-                precip[j] = data.hourly.precipitation[i];
-                windSpeed[j] = data.hourly.windspeed_10m[i];
-                windDir[j] = data.hourly.winddirection_10m[i];
-                     j = j + 1;
+                    if (time >= sundayMorning) {
+                        times.push(data.hourly.time[i]);
+                        temps.push(data.hourly.temperature_2m[i]);
+                        precip.push(data.hourly.precipitation[i]);
+                        windSpeed.push(data.hourly.windspeed_10m[i]);
+                        windDir.push(data.hourly.winddirection_10m[i]);
+                        j++;
                     }
                 }
 
@@ -59,7 +59,7 @@
 
                 const tempMin = Math.min(...temps) - 2;
                 const tempMax = Math.max(...temps) + 2;
-                const windMax = Math.max(...windSpeed) + 2;
+                const windMax = Math.max(...windSpeed, ...precip) + 5;  // ✅ Include precip in max
 
                 if (chart) chart.destroy();
 
@@ -68,7 +68,6 @@
                     data: {
                         labels: labels,
                         datasets: [{
-                            // Temperature - CLEAR red labels above points
                             type: 'line',
                             label: 'Temp °C',
                             data: temps,
@@ -79,7 +78,7 @@
                             tension: 0.4,
                             yAxisID: 'y',
                             datalabels: {
-                                color: '#d63384',  // Darker red for visibility
+                                color: '#d63384',
                                 font: { weight: 'bold', size: 12 },
                                 formatter: (value) => value.toFixed(1),
                                 anchor: 'end',
@@ -90,7 +89,6 @@
                                 padding: 2
                             }
                         }, {
-                            // Precipitation - Black labels with white box above bars
                             type: 'bar',
                             label: 'Pluie mm',
                             data: precip,
@@ -110,7 +108,6 @@
                                 padding: 2
                             }
                         }, {
-                            // Wind speed - CLEAR teal labels above points
                             type: 'line',
                             label: 'Vent km/h',
                             data: windSpeed,
@@ -121,10 +118,9 @@
                             tension: 0.4,
                             yAxisID: 'y1',
                             datalabels: {
-                                color: '#0d9488',  // Darker teal for visibility
-                                font: { weight: 'bold', size: 12 },
+                                color: '#0d9488',
+                                font: { weight: 'bold', size: 11 },
                                 formatter: function(value, context) {
-                                    // Get wind direction for this data point
                                     const windDirection = windDir[context.dataIndex];
                                     const direction = degToCompass(windDirection);
                                     return value.toFixed(0) + direction;
@@ -142,19 +138,11 @@
                         responsive: true,
                         maintainAspectRatio: false,
                         layout: {
-                            padding: {
-                                top: 40  // Extra space for all labels
-                            }
+                            padding: { top: 50 }
                         },
                         plugins: {
-                            legend: { 
-                                display: true,
-                                position: 'top'
-                            },
-                            datalabels: {
-                                display: true,
-                                clamp: true
-                            }
+                            legend: { display: true, position: 'top' },
+                            datalabels: { display: true, clamp: true }
                         },
                         scales: {
                             x: { 
@@ -162,16 +150,8 @@
                                 grid: { display: false },
                                 ticks: { maxRotation: 0, font: { size: 11 } }
                             },
-                            y: { 
-                                display: false,
-                                min: tempMin,
-                                max: tempMax
-                            },
-                            y1: { 
-                                display: false,
-                                min: 0,
-                                max: windMax
-                            }
+                            y: { display: false, min: tempMin, max: tempMax },
+                            y1: { display: false, min: 0, max: windMax }
                         }
                     },
                     plugins: [ChartDataLabels]
