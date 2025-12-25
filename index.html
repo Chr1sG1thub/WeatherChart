@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Chart - Fixed Height</title>
+    <title>Weather Chart - Fixed X-Axis</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <style>
         body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; }
         #weatherChart { 
-            width: 300px !important;
-            height: 500px !important;  /* ✅ FORCE exact dimensions */
-            max-height: none !important;
+            width: 350px !important;  /* ✅ Slightly wider for labels */
+            height: 500px !important;
         }
     </style>
 </head>
@@ -59,9 +58,9 @@
                 }
 
                 const labels = times.map(t => new Date(t).getHours().toString().padStart(2, '0') + 'h');
-                const tempMin = Math.min(...temps) - 3;  // ✅ Extra padding
+                const tempMin = Math.min(...temps) - 3;
                 const tempMax = Math.max(...temps) + 3;
-                const windMax = Math.max(...windSpeed, ...precip) + 8;  // ✅ Extra padding
+                const windMax = Math.max(...windSpeed, ...precip) + 8;
 
                 if (chart) chart.destroy();
 
@@ -85,7 +84,7 @@
                                 formatter: (value) => value.toFixed(1),
                                 anchor: 'end',
                                 align: 'top',
-                                offset: 8,  // ✅ More offset
+                                offset: 8,
                                 backgroundColor: 'rgba(255,255,255,0.9)',
                                 borderRadius: 3,
                                 padding: 2
@@ -96,8 +95,8 @@
                             data: precip,
                             backgroundColor: 'rgba(54, 162, 235, 0.9)',
                             yAxisID: 'y1',
-                            barPercentage: 0.6,
-                            categoryPercentage: 0.4,
+                            barPercentage: 0.7,  /* ✅ Wider bars */
+                            categoryPercentage: 0.5,  /* ✅ More spacing */
                             datalabels: {
                                 color: 'darkblue',
                                 font: { weight: 'bold', size: 12 },
@@ -129,7 +128,7 @@
                                 },
                                 anchor: 'end',
                                 align: 'top',
-                                offset: 8,  // ✅ More offset
+                                offset: 8,
                                 backgroundColor: 'rgba(255,255,255,0.9)',
                                 borderRadius: 3,
                                 padding: 2
@@ -138,14 +137,9 @@
                     },
                     options: {
                         responsive: true,
-                        maintainAspectRatio: false,  // ✅ Allow custom sizing
+                        maintainAspectRatio: false,
                         layout: {
-                            padding: { 
-                                top: 60,    // ✅ Extra top padding
-                                bottom: 20,
-                                left: 10,
-                                right: 10
-                            }
+                            padding: { top: 60, bottom: 30 }  /* ✅ Extra bottom padding */
                         },
                         plugins: {
                             legend: { display: true, position: 'top' },
@@ -155,7 +149,11 @@
                             x: { 
                                 display: true,
                                 grid: { display: false },
-                                ticks: { maxRotation: 0, font: { size: 11 } }
+                                ticks: { 
+                                    maxRotation: 45,  /* ✅ Rotate labels 45° */
+                                    minRotation: 45,
+                                    font: { size: 11 }
+                                }
                             },
                             y: { display: false, min: tempMin, max: tempMax },
                             y1: { display: false, min: 0, max: windMax }
