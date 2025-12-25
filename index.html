@@ -42,7 +42,7 @@
                 let precip = [];
                 let windSpeed = [];
 
-                for (let i = 0, j = 0; j < 6 && i < times.length; i++) {
+                for (let i = 0, j = 0; j < 6 && i < data.hourly.length; i++) {
                     const time = new Date(times[i]);
                     if (time >= sundayMorning) {  // Only future hours
                 times[j] = data.hourly.time[i];
