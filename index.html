@@ -43,7 +43,7 @@
                 let windSpeed = [];
 
                 for (let i = 0, j = 0; j < 6 && i < data.hourly.time.length; i++) {
-                    const time = new Date(times[i]);
+                    const time = new Date(data.hourly.time[i]);
                     if (time >= sundayMorning) {  // Only future hours
                 times[j] = data.hourly.time[i];
                 temps[j] = data.hourly.temperature_2m[i];
