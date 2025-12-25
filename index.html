@@ -60,7 +60,7 @@
                     const time = new Date(data.hourly.time[i]);
                     if (time >= sundayMorning) {
                         times.push(data.hourly.time[i]);
-                        temps.push(data.hourly.temperature_2m[i]);
+                        temps.push(Math.round(data.hourly.temperature_2m[i]));
                         precip.push(data.hourly.precipitation[i]);
                         windSpeed.push(data.hourly.windspeed_10m[i]);
                         windDir.push(data.hourly.winddirection_10m[i]);
@@ -93,7 +93,7 @@
                             datalabels: {
                                 color: '#d63384',
                                 font: { weight: 'bold', size: 12 },
-                                formatter: (value) => value.toFixed(1),
+                                formatter: (value) => value.toFixed(0),
                                 anchor: 'end',
                                 align: 'top',
                                 offset: 6,
