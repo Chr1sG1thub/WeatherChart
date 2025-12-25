@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Forecast Chart</title>
+    <title>Weather Forecast Chart - Data Labels</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <style>
         body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; }
         #weatherChart { max-height: 400px; }
@@ -19,6 +20,9 @@
         const lon = 2.35;
         const ctx = document.getElementById('weatherChart').getContext('2d');
         let chart;
+
+        // Register data labels plugin
+        Chart.register(ChartDataLabels);
 
         async function loadWeatherChart() {
             try {
@@ -37,7 +41,7 @@
                 if (chart) chart.destroy();
 
                 chart = new Chart(ctx, {
-                    type: 'bar',  // Base type for mixed charts
+                    type: 'bar',
                     data: {
                         labels: labels,
                         datasets: [{
@@ -49,13 +53,21 @@
                             borderWidth: 3,
                             fill: false,
                             tension: 0.4,
-                            yAxisID: 'y'
+                            datalabels: {
+                                color: 'rgb(255, 99, 132)',
+                                font: { weight: 'bold' },
+                                formatter: (value) => value.toFixed(1) + '°C'
+                            }
                         }, {
                             type: 'bar',
                             label: 'Precipitation (mm)',
                             data: precip,
                             backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                            yAxisID: 'y1'
+                            datalabels: {
+                                color: 'white',
+                                font: { weight: 'bold', size: 12 },
+                                formatter: (value) => value > 0 ? value.toFixed(1) + 'mm' : ''
+                            }
                         }, {
                             type: 'line',
                             label: 'Wind Speed (km/h)',
@@ -64,31 +76,44 @@
                             backgroundColor: 'rgba(75, 192, 192, 0.2)',
                             borderWidth: 2,
                             fill: false,
-                            yAxisID: 'y1'
+                            datalabels: {
+                                color: 'rgb(75, 192, 192)',
+                                font: { weight: 'bold' },
+                                formatter: (value) => value.toFixed(0) + 'km/h'
+                            }
                         }]
                     },
                     options: {
                         responsive: true,
+                        plugins: {
+                            legend: { display: true },
+                            datalabels: {
+                                anchor: 'end',
+                                align: 'top',
+                                offset: 4
+                            }
+                        },
                         interaction: {
                             intersect: false,
                             mode: 'index'
                         },
                         scales: {
-                            y: {
-                                type: 'linear',
-                                display: true,
-                                position: 'left',
-                                title: { display: true, text: 'Temperature (°C)' }
+                            x: { display: false },  // Hide X axis
+                            y: { 
+                                display: false,      // Hide Y axis
+                                beginAtZero: true 
                             },
-                            y1: {
-                                type: 'linear',
-                                display: true,
-                                position: 'right',
-                                title: { display: true, text: 'Precipitation (mm) / Wind (km/h)' },
-                                grid: { drawOnChartArea: false }
+                            y1: { 
+                                display: false,      // Hide secondary Y axis
+                                beginAtZero: true 
                             }
                         }
-                    }
+                    },
+                    plugins: [{
+                        beforeDraw: function(chart) {
+                            // Custom positioning for data labels
+                        }
+                    }]
                 });
             } catch (error) {
                 console.error('Chart load error:', error);
