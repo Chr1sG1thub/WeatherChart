@@ -37,13 +37,18 @@
                 const response = await fetch(url);
                 const data = await response.json();
 
+                let times = [];
+                let temps = [];
+                let precip = [];
+                let windSpeed = [];
+
                 for (let i = 0, j = 0; j < 6 && i < times.length; i++) {
                     const time = new Date(times[i]);
                     if (time >= sundayMorning) {  // Only future hours
-                   let times[j] = data.hourly.time[i];
-                let temps[j] = data.hourly.temperature_2m[i];
-                let precip[j] = data.hourly.precipitation[i];
-                let windSpeed[j] = data.hourly.windspeed_10m[i];
+                times[j] = data.hourly.time[i];
+                temps[j] = data.hourly.temperature_2m[i];
+                precip[j] = data.hourly.precipitation[i];
+                windSpeed[j] = data.hourly.windspeed_10m[i];
                      j = j + 1;
                     }
                 }
