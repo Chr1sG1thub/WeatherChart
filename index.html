@@ -68,7 +68,8 @@
                 }
 
                 const labels = times.map(t => new Date(t).getHours().toString().padStart(2, '0') + 'h');
-                const tempMin = Math.min(...temps) - 2;
+                //const tempMin = Math.min(...temps) - 2;
+                const tempMin = 0;
                 const tempMax = Math.max(...temps) + 2;
                 const windMax = Math.max(...windSpeed, ...precip) + 5;
 
