@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Chart - Narrow X-Axis</title>
+    <title>Weather Chart - Fixed Precip Labels</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <style>
@@ -21,6 +21,7 @@
         const ctx = document.getElementById('weatherChart').getContext('2d');
         let chart;
 
+        // Register plugin FIRST
         Chart.register(ChartDataLabels);
 
         async function loadWeatherChart() {
@@ -29,14 +30,12 @@
                 const response = await fetch(url);
                 const data = await response.json();
 
-                // Extract next 4 hours
                 const times = data.hourly.time.slice(0, 4);
                 const labels = times.map(t => new Date(t).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
                 const temps = data.hourly.temperature_2m.slice(0, 4);
                 const precip = data.hourly.precipitation.slice(0, 4);
                 const windSpeed = data.hourly.windspeed_10m.slice(0, 4);
 
-                // Calculate dynamic ranges
                 const tempMin = Math.min(...temps) - 2;
                 const tempMax = Math.max(...temps) + 2;
                 const windMax = Math.max(...windSpeed, ...precip) + 5;
@@ -60,26 +59,26 @@
                             datalabels: {
                                 color: 'rgb(255, 99, 132)',
                                 font: { weight: 'bold', size: 12 },
-                                formatter: (value) => value.toFixed(1),
-                                anchor: 'end',
-                                align: 'top',
-                                offset: 4
+                                formatter: (value) => value.toFixed(1)
                             }
                         }, {
                             type: 'bar',
                             label: 'Precipitation (mm)',
                             data: precip,
-                            backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.9)',  // Darker blue
                             yAxisID: 'y1',
-                            barPercentage: 0.6,  // Narrower bars
-                            categoryPercentage: 0.4,  // Less spacing between bars
+                            barPercentage: 0.6,
+                            categoryPercentage: 0.4,
                             datalabels: {
-                                color: 'white',
+                                color: '#000',  // BLACK text for visibility
                                 font: { weight: 'bold', size: 12 },
                                 formatter: (value) => value.toFixed(1),
                                 anchor: 'end',
                                 align: 'top',
-                                offset: 6
+                                offset: 4,
+                                backgroundColor: 'rgba(255,255,255,0.8)',  // White background
+                                borderRadius: 3,
+                                padding: 2
                             }
                         }, {
                             type: 'line',
@@ -94,10 +93,7 @@
                             datalabels: {
                                 color: 'rgb(75, 192, 192)',
                                 font: { weight: 'bold', size: 12 },
-                                formatter: (value) => value.toFixed(0),
-                                anchor: 'end',
-                                align: 'top',
-                                offset: 4
+                                formatter: (value) => value.toFixed(0)
                             }
                         }]
                     },
@@ -106,43 +102,38 @@
                         maintainAspectRatio: false,
                         layout: {
                             padding: {
-                                top: 40,
-                                bottom: 10
+                                top: 50
                             }
                         },
                         plugins: {
                             legend: { 
                                 display: true,
                                 position: 'top'
+                            },
+                            datalabels: {
+                                display: true,
+                                clamp: true
                             }
-                        },
-                        interaction: {
-                            intersect: false,
-                            mode: 'index'
                         },
                         scales: {
                             x: { 
                                 display: true,
                                 grid: { display: false },
-                                ticks: {
-                                    maxRotation: 0,  // Horizontal labels
-                                    font: { size: 11 }
-                                }
+                                ticks: { maxRotation: 0, font: { size: 11 } }
                             },
                             y: { 
                                 display: false,
                                 min: tempMin,
-                                max: tempMax,
-                                beginAtZero: false
+                                max: tempMax
                             },
                             y1: { 
                                 display: false,
                                 min: 0,
-                                max: windMax,
-                                beginAtZero: true
+                                max: windMax
                             }
                         }
-                    }
+                    },
+                    plugins: [ChartDataLabels]  // Explicit plugin registration
                 });
             } catch (error) {
                 console.error('Chart load error:', error);
