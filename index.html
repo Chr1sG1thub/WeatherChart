@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Forecast Chart - Data Labels</title>
+    <title>Weather Chart - Individual Data Labels</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <style>
@@ -45,6 +45,7 @@
                     data: {
                         labels: labels,
                         datasets: [{
+                            // Temperature line - label above points
                             type: 'line',
                             label: 'Temperature (°C)',
                             data: temps,
@@ -53,44 +54,60 @@
                             borderWidth: 3,
                             fill: false,
                             tension: 0.4,
+                            yAxisID: 'y',
                             datalabels: {
                                 color: 'rgb(255, 99, 132)',
-                                font: { weight: 'bold' },
-                                formatter: (value) => value.toFixed(1) + '°C'
+                                font: { weight: 'bold', size: 12 },
+                                formatter: (value) => value.toFixed(1) + '°C',
+                                anchor: 'end',
+                                align: 'top',
+                                offset: 4
                             }
                         }, {
+                            // Precipitation bars - label above bars
                             type: 'bar',
                             label: 'Precipitation (mm)',
                             data: precip,
-                            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                            yAxisID: 'y1',
                             datalabels: {
-                                color: 'white',
+                                color: 'rgb(54, 162, 235)',
                                 font: { weight: 'bold', size: 12 },
-                                formatter: (value) => value > 0 ? value.toFixed(1) + 'mm' : ''
+                                formatter: (value) => value > 0 ? value.toFixed(1) + 'mm' : '',
+                                anchor: 'end',
+                                align: 'top',
+                                offset: 4
                             }
                         }, {
+                            // Wind speed line - label above points
                             type: 'line',
                             label: 'Wind Speed (km/h)',
                             data: windSpeed,
                             borderColor: 'rgb(75, 192, 192)',
                             backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            borderWidth: 2,
+                            borderWidth: 3,
                             fill: false,
+                            tension: 0.4,
+                            yAxisID: 'y1',
                             datalabels: {
                                 color: 'rgb(75, 192, 192)',
-                                font: { weight: 'bold' },
-                                formatter: (value) => value.toFixed(0) + 'km/h'
+                                font: { weight: 'bold', size: 12 },
+                                formatter: (value) => value.toFixed(0) + 'km/h',
+                                anchor: 'end',
+                                align: 'top',
+                                offset: 4
                             }
                         }]
                     },
                     options: {
                         responsive: true,
                         plugins: {
-                            legend: { display: true },
+                            legend: { 
+                                display: true,
+                                position: 'top'
+                            },
                             datalabels: {
-                                anchor: 'end',
-                                align: 'top',
-                                offset: 4
+                                display: true
                             }
                         },
                         interaction: {
@@ -98,22 +115,22 @@
                             mode: 'index'
                         },
                         scales: {
-                            x: { display: false },  // Hide X axis
+                            x: { 
+                                display: true,  // Keep time labels visible
+                                grid: { display: false }
+                            },
                             y: { 
-                                display: false,      // Hide Y axis
-                                beginAtZero: true 
+                                display: false,  // NO Y-axis display
+                                beginAtZero: true,
+                                max: 40  // Reasonable temp range
                             },
                             y1: { 
-                                display: false,      // Hide secondary Y axis
-                                beginAtZero: true 
+                                display: false,  // NO secondary Y-axis display
+                                beginAtZero: true,
+                                max: 50  // Reasonable precip/wind range
                             }
                         }
-                    },
-                    plugins: [{
-                        beforeDraw: function(chart) {
-                            // Custom positioning for data labels
-                        }
-                    }]
+                    }
                 });
             } catch (error) {
                 console.error('Chart load error:', error);
