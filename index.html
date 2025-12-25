@@ -16,8 +16,16 @@
     <canvas id="weatherChart"></canvas>
 
     <script>
-        const lat = 42.54;  // Vinça, France
-        const lon = 2.35;
+        const lat = 42.656854;  // Latitude
+        const lon = 2.585727;   // Longitude
+
+        const sundayMorning = new Date("December 28, 2025 07:00:00");
+
+    function degToCompass(deg) {
+    const dirs = ['⬇️', '↙️', '⬅️', '↖️', '⬆️', '↗️', '➡️', '↘️'];
+    return dirs[Math.round(deg / 45) % 8];
+    }
+
         const ctx = document.getElementById('weatherChart').getContext('2d');
         let chart;
 
@@ -25,16 +33,22 @@
 
         async function loadWeatherChart() {
             try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,precipitation,windspeed_10m&forecast_days=1&timezone=auto`;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,precipitation,windspeed_10m&forecast_days=8&timezone=auto`;
                 const response = await fetch(url);
                 const data = await response.json();
 
-                const times = data.hourly.time.slice(0, 4);
-                const labels = times.map(t => new Date(t).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
-                const temps = data.hourly.temperature_2m.slice(0, 4);
-                const precip = data.hourly.precipitation.slice(0, 4);
-                const windSpeed = data.hourly.windspeed_10m.slice(0, 4);
+                for (let i = 0, j = 0; j < 6 && i < times.length; i++) {
+                    const time = new Date(times[i]);
+                    if (time >= sundayMorning) {  // Only future hours
+                   let times[j] = data.hourly.time[i];
+                let temps[j] = data.hourly.temperature_2m[i];
+                let precip[j] = data.hourly.precipitation[i];
+                let windSpeed[j] = data.hourly.windspeed_10m[i];
+                     j = j + 1;
+                    }
+                }
 
+                const labels = times.map(t => new Date(t).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
                 const tempMin = Math.min(...temps) - 2;
                 const tempMax = Math.max(...temps) + 2;
                 const windMax = Math.max(...windSpeed, ...precip) + 5;
