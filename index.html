@@ -3,30 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Chart</title>
+    <title>Weather Chart - Fixed Height</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <style>
         body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; }
-        .chart-container {
-            position: relative;
-            width: 300px;
-            height: 500px;  /* ✅ Fixed taller height */
-            margin: 0 auto;
-        }
         #weatherChart { 
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            width: 300px !important;
+            height: 500px !important;  /* ✅ FORCE exact dimensions */
+            max-height: none !important;
         }
     </style>
 </head>
 <body>
-    <div class="chart-container">
-        <canvas id="weatherChart"></canvas>
-    </div>
+    <canvas id="weatherChart"></canvas>
 
     <script>
         const lat = 42.656854;
@@ -69,9 +59,9 @@
                 }
 
                 const labels = times.map(t => new Date(t).getHours().toString().padStart(2, '0') + 'h');
-                const tempMin = Math.min(...temps) - 2;
-                const tempMax = Math.max(...temps) + 2;
-                const windMax = Math.max(...windSpeed, ...precip) + 5;
+                const tempMin = Math.min(...temps) - 3;  // ✅ Extra padding
+                const tempMax = Math.max(...temps) + 3;
+                const windMax = Math.max(...windSpeed, ...precip) + 8;  // ✅ Extra padding
 
                 if (chart) chart.destroy();
 
@@ -95,7 +85,7 @@
                                 formatter: (value) => value.toFixed(1),
                                 anchor: 'end',
                                 align: 'top',
-                                offset: 6,
+                                offset: 8,  // ✅ More offset
                                 backgroundColor: 'rgba(255,255,255,0.9)',
                                 borderRadius: 3,
                                 padding: 2
@@ -114,7 +104,7 @@
                                 formatter: (value) => value.toFixed(1),
                                 anchor: 'end',
                                 align: 'top',
-                                offset: 4,
+                                offset: 6,
                                 backgroundColor: 'rgba(255,255,255,0.9)',
                                 borderRadius: 3,
                                 padding: 2
@@ -139,7 +129,7 @@
                                 },
                                 anchor: 'end',
                                 align: 'top',
-                                offset: 6,
+                                offset: 8,  // ✅ More offset
                                 backgroundColor: 'rgba(255,255,255,0.9)',
                                 borderRadius: 3,
                                 padding: 2
@@ -148,9 +138,14 @@
                     },
                     options: {
                         responsive: true,
-                        maintainAspectRatio: true,  /* ✅ Keep aspect ratio */
+                        maintainAspectRatio: false,  // ✅ Allow custom sizing
                         layout: {
-                            padding: { top: 50 }
+                            padding: { 
+                                top: 60,    // ✅ Extra top padding
+                                bottom: 20,
+                                left: 10,
+                                right: 10
+                            }
                         },
                         plugins: {
                             legend: { display: true, position: 'top' },
