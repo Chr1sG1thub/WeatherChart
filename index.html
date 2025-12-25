@@ -3,22 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Chart - Wind Direction Arrows</title>
+    <title>Weather Chart - All Labels Visible</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <style>
         body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; }
         #weatherChart { max-height: 400px; }
-        .wind-arrow { 
-            display: inline-block; 
-            width: 8px; 
-            height: 8px; 
-            border: solid #0d9488; 
-            border-width: 0 2px 2px 0; 
-            transform: rotate(var(--dir)); 
-            margin-left: 2px; 
-            vertical-align: middle;
-        }
     </style>
 </head>
 <body>
@@ -33,15 +23,9 @@
 
         Chart.register(ChartDataLabels);
 
-        // Wind direction to compass arrow (0°=North→, 90°=East↓, etc.)
-        function degToArrow(deg) {
-            const dir = (deg * 0.0174533) + Math.PI/2; // Convert to radians + compass offset
-            return `rotate(${dir}rad)`;
-        }
-
         async function loadWeatherChart() {
             try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,precipitation,windspeed_10m,winddirection_10m&forecast_days=1&timezone=auto`;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,precipitation,windspeed_10m&forecast_days=1&timezone=auto`;
                 const response = await fetch(url);
                 const data = await response.json();
 
@@ -50,7 +34,6 @@
                 const temps = data.hourly.temperature_2m.slice(0, 4);
                 const precip = data.hourly.precipitation.slice(0, 4);
                 const windSpeed = data.hourly.windspeed_10m.slice(0, 4);
-                const windDir = data.hourly.winddirection_10m.slice(0, 4);  // NEW: Wind direction
 
                 const tempMin = Math.min(...temps) - 2;
                 const tempMax = Math.max(...temps) + 2;
@@ -63,6 +46,7 @@
                     data: {
                         labels: labels,
                         datasets: [{
+                            // Temperature - CLEAR red labels above points
                             type: 'line',
                             label: 'Temperature (°C)',
                             data: temps,
@@ -73,7 +57,7 @@
                             tension: 0.4,
                             yAxisID: 'y',
                             datalabels: {
-                                color: '#d63384',
+                                color: '#d63384',  // Darker red for visibility
                                 font: { weight: 'bold', size: 12 },
                                 formatter: (value) => value.toFixed(1),
                                 anchor: 'end',
@@ -84,6 +68,7 @@
                                 padding: 2
                             }
                         }, {
+                            // Precipitation - Black labels with white box above bars
                             type: 'bar',
                             label: 'Precipitation (mm)',
                             data: precip,
@@ -103,6 +88,7 @@
                                 padding: 2
                             }
                         }, {
+                            // Wind speed - CLEAR teal labels above points
                             type: 'line',
                             label: 'Wind Speed (km/h)',
                             data: windSpeed,
@@ -113,20 +99,15 @@
                             tension: 0.4,
                             yAxisID: 'y1',
                             datalabels: {
-                                color: '#0d9488',
+                                color: '#0d9488',  // Darker teal for visibility
                                 font: { weight: 'bold', size: 12 },
-                                formatter: function(value, context) {
-                                    const windDirection = windDir[context.dataIndex];
-                                    const arrowStyle = degToArrow(windDirection);
-                                    return `${value.toFixed(0)} <span class="wind-arrow" style="--dir: ${arrowStyle}"></span>`;
-                                },
+                                formatter: (value) => value.toFixed(0),
                                 anchor: 'end',
                                 align: 'top',
-                                offset: 8,
-                                backgroundColor: 'rgba(255,255,255,0.95)',
-                                borderRadius: 4,
-                                padding: 4,
-                                textAlign: 'center'
+                                offset: 6,
+                                backgroundColor: 'rgba(255,255,255,0.9)',
+                                borderRadius: 3,
+                                padding: 2
                             }
                         }]
                     },
@@ -135,7 +116,7 @@
                         maintainAspectRatio: false,
                         layout: {
                             padding: {
-                                top: 70  // Extra space for wind arrows
+                                top: 60  // Extra space for all labels
                             }
                         },
                         plugins: {
