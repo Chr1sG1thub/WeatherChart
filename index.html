@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Chart - Proper Scaling</title>
+    <title>Weather Chart - Clean Value Labels</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <style>
@@ -36,7 +36,7 @@
                 const precip = data.hourly.precipitation.slice(0, 4);
                 const windSpeed = data.hourly.windspeed_10m.slice(0, 4);
 
-                // Calculate dynamic ranges based on actual data
+                // Calculate dynamic ranges
                 const tempMin = Math.min(...temps) - 2;
                 const tempMax = Math.max(...temps) + 2;
                 const windMax = Math.max(...windSpeed, ...precip) + 5;
@@ -60,7 +60,7 @@
                             datalabels: {
                                 color: 'rgb(255, 99, 132)',
                                 font: { weight: 'bold', size: 12 },
-                                formatter: (value) => value.toFixed(1) + '°C',
+                                formatter: (value) => value.toFixed(1),  // Just the number
                                 anchor: 'end',
                                 align: 'top',
                                 offset: 4
@@ -74,10 +74,10 @@
                             datalabels: {
                                 color: 'white',
                                 font: { weight: 'bold', size: 12 },
-                                formatter: (value) => value > 0 ? value.toFixed(1) + 'mm' : '',
+                                formatter: (value) => value.toFixed(1),  // Just the number
                                 anchor: 'end',
                                 align: 'top',
-                                offset: 4
+                                offset: 6
                             }
                         }, {
                             type: 'line',
@@ -92,7 +92,7 @@
                             datalabels: {
                                 color: 'rgb(75, 192, 192)',
                                 font: { weight: 'bold', size: 12 },
-                                formatter: (value) => value.toFixed(0) + 'km/h',
+                                formatter: (value) => value.toFixed(0),  // Just the number
                                 anchor: 'end',
                                 align: 'top',
                                 offset: 4
@@ -104,8 +104,7 @@
                         maintainAspectRatio: false,
                         layout: {
                             padding: {
-                                top: 30,  // Extra space for labels
-                                bottom: 20
+                                top: 40
                             }
                         },
                         plugins: {
@@ -127,7 +126,7 @@
                                 display: false,
                                 min: tempMin,
                                 max: tempMax,
-                                beginAtZero: false  // Allow negative temps
+                                beginAtZero: false
                             },
                             y1: { 
                                 display: false,
