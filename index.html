@@ -59,7 +59,7 @@
 
                 const tempMin = Math.min(...temps) - 2;
                 const tempMax = Math.max(...temps) + 2;
-                const windMax = Math.max(...windSpeed, ...precip) + 5;
+                const windMax = Math.max(...windSpeed) + 2;
 
                 if (chart) chart.destroy();
 
