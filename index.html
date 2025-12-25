@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Chart - Clean Value Labels</title>
+    <title>Weather Chart - Narrow X-Axis</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <style>
@@ -60,7 +60,7 @@
                             datalabels: {
                                 color: 'rgb(255, 99, 132)',
                                 font: { weight: 'bold', size: 12 },
-                                formatter: (value) => value.toFixed(1),  // Just the number
+                                formatter: (value) => value.toFixed(1),
                                 anchor: 'end',
                                 align: 'top',
                                 offset: 4
@@ -71,10 +71,12 @@
                             data: precip,
                             backgroundColor: 'rgba(54, 162, 235, 0.8)',
                             yAxisID: 'y1',
+                            barPercentage: 0.6,  // Narrower bars
+                            categoryPercentage: 0.4,  // Less spacing between bars
                             datalabels: {
                                 color: 'white',
                                 font: { weight: 'bold', size: 12 },
-                                formatter: (value) => value.toFixed(1),  // Just the number
+                                formatter: (value) => value.toFixed(1),
                                 anchor: 'end',
                                 align: 'top',
                                 offset: 6
@@ -92,7 +94,7 @@
                             datalabels: {
                                 color: 'rgb(75, 192, 192)',
                                 font: { weight: 'bold', size: 12 },
-                                formatter: (value) => value.toFixed(0),  // Just the number
+                                formatter: (value) => value.toFixed(0),
                                 anchor: 'end',
                                 align: 'top',
                                 offset: 4
@@ -104,7 +106,8 @@
                         maintainAspectRatio: false,
                         layout: {
                             padding: {
-                                top: 40
+                                top: 40,
+                                bottom: 10
                             }
                         },
                         plugins: {
@@ -120,7 +123,11 @@
                         scales: {
                             x: { 
                                 display: true,
-                                grid: { display: false }
+                                grid: { display: false },
+                                ticks: {
+                                    maxRotation: 0,  // Horizontal labels
+                                    font: { size: 11 }
+                                }
                             },
                             y: { 
                                 display: false,
