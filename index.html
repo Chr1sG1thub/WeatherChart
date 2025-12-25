@@ -33,7 +33,7 @@
 
         async function loadWeatherChart() {
             try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,precipitation,windspeed_10m&forecast_days=8&timezone=auto`;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,precipitation,windspeed_10m,winddirection_10m&forecast_days=8&timezone=auto`;
                 const response = await fetch(url);
                 const data = await response.json();
 
@@ -41,6 +41,7 @@
                 let temps = [];
                 let precip = [];
                 let windSpeed = [];
+                let windDir = [];
 
                 for (let i = 0, j = 0; j < 6 && i < data.hourly.time.length; i++) {
                     const time = new Date(data.hourly.time[i]);
@@ -49,6 +50,7 @@
                 temps[j] = data.hourly.temperature_2m[i];
                 precip[j] = data.hourly.precipitation[i];
                 windSpeed[j] = data.hourly.windspeed_10m[i];
+                windDir[j] = data.hourly.winddirection_10m[i];
                      j = j + 1;
                     }
                 }
