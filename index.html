@@ -61,18 +61,19 @@
         const weatherDate = new Date(dateParam + "T07:00:00");
         const weatherDepart = getQueryParam("depart");
 
+        let lat, lon;
         if (weatherDepart == "Corbère-les-Cabanes") {
-            const lat = 42.658135;
-            const lon = 2.677681;
+         lat = 42.658135;
+         lon = 2.677681;
         } else if (weatherDepart == "Millas") {
-            const lat = 42.692760;
-            const lon = 2.687678;
+         lat = 42.692760;
+         lon = 2.687678;
         } else if (weatherDepart == "Prades") {
-            const lat = 42.621790;
-            const lon = 2.435692;
+         lat = 42.621790;
+         lon = 2.435692;
         } else { //Bouleternère
-            const lat = 42.656854;
-            const lon = 2.585727;
+         lat = 42.656854;
+         lon = 2.585727;
         }
 
         const options = {
