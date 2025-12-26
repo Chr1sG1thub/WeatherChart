@@ -49,7 +49,7 @@
         }
 
          const weatherDate = new Date(getQueryParam("date") + "T07:00:00");
-          const weatherDepart = new Date(getQueryParam("depart"));
+          const weatherDepart = getQueryParam("depart");
 
         if (weatherDepart == "Corbère-les-Cabanes") {
           const lat = 42.658135;
