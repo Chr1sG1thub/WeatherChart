@@ -31,7 +31,13 @@
     <script>
         const lat = 42.656854;
         const lon = 2.585727;
-        const sundayMorning = new Date("December 27, 2025 07:00:00");
+        const sundayMorning = new Date("2025-12-27T07:00:00");
+
+     function getQueryParam(name) {
+      const value = new URLSearchParams(window.location.search).get(name);
+//      console.log(`Query param "${name}":`, value);
+      return value;
+    }
 
         function degToCompass(deg) {
             const dirs = ['⬇️', '↙️', '⬅️', '↖️', '⬆️', '↗️', '➡️', '↘️'];
