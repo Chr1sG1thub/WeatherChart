@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,25 +8,33 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; }
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
         .chart-container {
             position: relative;
             width: 50vh;
             height: 70vh;
             margin: 0 auto;
         }
-        #weatherChart { 
-            /* position: absolute;
+
+        /*#weatherChart {
+             position: absolute;
             top: 0;
             left: 0;  
                    position: relative;
            margin: auto;
             width: 90%;
      width: 90%; 
-            height: 90%; */
-        }
+            height: 90%;
+        }*/
     </style>
 </head>
+
 <body>
 
     <h2 style="text-align: center" id="pm"></h2>
@@ -36,43 +45,43 @@
     <script>
         const lat = 42.656854;
         const lon = 2.585727;
- 
-     function getQueryParam(name) {
-      const value = new URLSearchParams(window.location.search).get(name);
-//      console.log(`Query param "${name}":`, value);
-      return value;
-    }
+
+        function getQueryParam(name) {
+            const value = new URLSearchParams(window.location.search).get(name);
+            //      console.log(`Query param "${name}":`, value);
+            return value;
+        }
 
         function degToCompass(deg) {
             const dirs = ['⬇️', '↙️', '⬅️', '↖️', '⬆️', '↗️', '➡️', '↘️'];
             return dirs[Math.round(deg / 45) % 8];
         }
 
-         const weatherDate = new Date(getQueryParam("date") + "T07:00:00");
-          const weatherDepart = getQueryParam("depart");
+        const weatherDate = new Date(getQueryParam("date") + "T07:00:00");
+        const weatherDepart = getQueryParam("depart");
 
         if (weatherDepart == "Corbère-les-Cabanes") {
-          const lat = 42.658135;
-          const lon =  2.677681;
-} else if (weatherDepart == "Millas") {
-                const lat = 42.692760;
-        const lon = 2.687678;
-} else if (weatherDepart == "Prades") {
-                const lat = 42.621790;
-        const lon = 2.435692;
-} else { //Bouleternère
-                const lat = 42.656854;
-        const lon = 2.585727;
-}
+            const lat = 42.658135;
+            const lon = 2.677681;
+        } else if (weatherDepart == "Millas") {
+            const lat = 42.692760;
+            const lon = 2.687678;
+        } else if (weatherDepart == "Prades") {
+            const lat = 42.621790;
+            const lon = 2.435692;
+        } else { //Bouleternère
+            const lat = 42.656854;
+            const lon = 2.585727;
+        }
 
-const options = {
-  weekday: "long",
-  year: "numeric",
-  month: "long",
-  day: "numeric"
-};
-        
-const weatherDateFrench = weatherDate.toLocaleDateString("fr-FR", options);
+        const options = {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        };
+
+        const weatherDateFrench = weatherDate.toLocaleDateString("fr-FR", options);
         document.getElementById('pm').innerHTML = "Prévisions Météo : " + weatherDateFrench;
 
         const ctx = document.getElementById('weatherChart').getContext('2d');
@@ -170,7 +179,7 @@ const weatherDateFrench = weatherDate.toLocaleDateString("fr-FR", options);
                             datalabels: {
                                 color: '#0d9488',
                                 font: { weight: 'bold', size: 11 },
-                                formatter: function(value, context) {
+                                formatter: function (value, context) {
                                     const windDirection = windDir[context.dataIndex];
                                     const direction = degToCompass(windDirection);
                                     return value.toFixed(0) + direction;
@@ -195,10 +204,10 @@ const weatherDateFrench = weatherDate.toLocaleDateString("fr-FR", options);
                             datalabels: { display: true, clamp: true }
                         },
                         scales: {
-                            x: { 
+                            x: {
                                 display: true,
                                 grid: { display: false },
-                                ticks: { maxRotation: 0, font: { size: 12, weight: 'bold'} }
+                                ticks: { maxRotation: 0, font: { size: 12, weight: 'bold' } }
                             },
                             y: { display: false, min: tempMin, max: tempMax },
                             y1: { display: false, min: 0, max: windMax }
