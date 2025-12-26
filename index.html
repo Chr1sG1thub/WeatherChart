@@ -43,8 +43,6 @@
     </div>
 
     <script>
-        const lat = 42.656854;
-        const lon = 2.585727;
 
         function getQueryParam(name) {
             const value = new URLSearchParams(window.location.search).get(name);
@@ -57,7 +55,10 @@
             return dirs[Math.round(deg / 45) % 8];
         }
 
-        const weatherDate = new Date(getQueryParam("date") + "T07:00:00");
+        const dateParam = getQueryParam("date");
+        if (!dateParam) dateParam = "2026-01-01";
+        
+        const weatherDate = new Date(dateParam + "T07:00:00");
         const weatherDepart = getQueryParam("depart");
 
         if (weatherDepart == "Corbère-les-Cabanes") {
