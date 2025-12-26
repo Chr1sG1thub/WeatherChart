@@ -56,7 +56,7 @@
         }
 
         let dateParam = getQueryParam("date");
-        if (!dateParam) dateParam = "2026-01-01";
+        if (!dateParam) dateParam = new Date().toISOString().split('T')[0];
         
         const weatherDate = new Date(dateParam + "T07:00:00");
         const weatherDepart = getQueryParam("depart");
