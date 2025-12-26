@@ -43,7 +43,17 @@
             return dirs[Math.round(deg / 45) % 8];
         }
 
-         const sundayMorning = new Date(getQueryParam("date"));
+         const weatherDate = new Date(getQueryParam("date") + "T07:00:00");
+
+const options = {
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  day: "numeric"
+};
+        
+const weatherDateFrench = weatherDate.toLocaleDateString("fr-FR", options);
+        console.log(weatherDateFrench);
 
         const ctx = document.getElementById('weatherChart').getContext('2d');
         let chart;
