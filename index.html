@@ -31,8 +31,7 @@
     <script>
         const lat = 42.656854;
         const lon = 2.585727;
-        const sundayMorning = new Date("2025-12-27T07:00:00");
-
+ 
      function getQueryParam(name) {
       const value = new URLSearchParams(window.location.search).get(name);
 //      console.log(`Query param "${name}":`, value);
@@ -43,6 +42,8 @@
             const dirs = ['⬇️', '↙️', '⬅️', '↖️', '⬆️', '↗️', '➡️', '↘️'];
             return dirs[Math.round(deg / 45) % 8];
         }
+
+         const sundayMorning = new Date(getQueryParam("date"));
 
         const ctx = document.getElementById('weatherChart').getContext('2d');
         let chart;
