@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE >
+< lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Chart</title>
+    <title>Prévision Météo</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <style>
@@ -24,6 +24,8 @@
     </style>
 </head>
 <body>
+
+    <h2 id="pm"></h2>
     <div class="chart-container">
         <canvas id="weatherChart"></canvas>
     </div>
@@ -53,7 +55,7 @@ const options = {
 };
         
 const weatherDateFrench = weatherDate.toLocaleDateString("fr-FR", options);
-        console.log(weatherDateFrench);
+        document.getElementById('pm').innerHTML = weatherDateFrench;
 
         const ctx = document.getElementById('weatherChart').getContext('2d');
         let chart;
@@ -194,4 +196,4 @@ const weatherDateFrench = weatherDate.toLocaleDateString("fr-FR", options);
         loadWeatherChart();
     </script>
 </body>
-</html>
+</>
