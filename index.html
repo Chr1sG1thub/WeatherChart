@@ -58,7 +58,7 @@ const options = {
 };
         
 const weatherDateFrench = weatherDate.toLocaleDateString("fr-FR", options);
-        document.getElementById('pm').innerHTML = "Prévisions Météo : " + weatherDateFrench;
+        document.getElementById('pm').innerHTML = "Prévisions Météo : le matin du " + weatherDateFrench;
 
         const ctx = document.getElementById('weatherChart').getContext('2d');
         let chart;
@@ -78,7 +78,7 @@ const weatherDateFrench = weatherDate.toLocaleDateString("fr-FR", options);
                 const windDir = [];
 
                 let j = 0;
-                for (let i = 0; j < 6 && i < data.hourly.time.length; i++) {
+                for (let i = 0; j < 7 && i < data.hourly.time.length; i++) {
                     const time = new Date(data.hourly.time[i]);
                     if (time >= weatherDate) {
                         times.push(data.hourly.time[i]);
