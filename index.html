@@ -49,6 +49,21 @@
         }
 
          const weatherDate = new Date(getQueryParam("date") + "T07:00:00");
+          const weatherDepart = new Date(getQueryParam("depart"));
+
+        if (weatherDepart == "Corbère-les-Cabanes") {
+          const lat = 42.658135;
+          const lon =  2.677681;
+} else if (weatherDepart == "Millas") {
+                const lat = 42.692760;
+        const lon = 2.687678;
+} else if (weatherDepart == "Prades") {
+                const lat = 42.621790;
+        const lon = 2.435692;
+} else { //Bouleternère
+                const lat = 42.656854;
+        const lon = 2.585727;
+}
 
 const options = {
   weekday: "long",
