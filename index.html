@@ -55,7 +55,7 @@
             return dirs[Math.round(deg / 45) % 8];
         }
 
-        const dateParam = getQueryParam("date");
+        let dateParam = getQueryParam("date");
         if (!dateParam) dateParam = "2026-01-01";
         
         const weatherDate = new Date(dateParam + "T07:00:00");
