@@ -58,7 +58,7 @@ const options = {
 };
         
 const weatherDateFrench = weatherDate.toLocaleDateString("fr-FR", options);
-        document.getElementById('pm').innerHTML = "Prévisions Météo : le matin du " + weatherDateFrench;
+        document.getElementById('pm').innerHTML = "Prévisions Météo : " + weatherDateFrench;
 
         const ctx = document.getElementById('weatherChart').getContext('2d');
         let chart;
