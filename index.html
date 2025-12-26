@@ -75,7 +75,7 @@ const weatherDateFrench = weatherDate.toLocaleDateString("fr-FR", options);
                 let j = 0;
                 for (let i = 0; j < 6 && i < data.hourly.time.length; i++) {
                     const time = new Date(data.hourly.time[i]);
-                    if (time >= sundayMorning) {
+                    if (time >= weatherDate) {
                         times.push(data.hourly.time[i]);
                         temps.push(Math.round(data.hourly.temperature_2m[i]));
                         precip.push(data.hourly.precipitation[i]);
