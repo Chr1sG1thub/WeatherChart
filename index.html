@@ -113,7 +113,7 @@
                     if (time >= weatherDate) {
                         times.push(data.hourly.time[i]);
                         temps.push(Math.round(data.hourly.temperature_2m[i]));
-                        precip.push(data.hourly.precipitation[i]);
+                        precip.push(data.hourly.precipitation[i+1]);
                         windSpeed.push(data.hourly.windspeed_10m[i]);
                         windDir.push(data.hourly.winddirection_10m[i]);
                         j++;
