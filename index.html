@@ -38,6 +38,7 @@
 <body>
 
     <h2 style="text-align: center" id="pm"></h2>
+    <h3 style="text-align: center" id="dep"></h3>
     <div class="chart-container">
         <canvas id="weatherChart"></canvas>
     </div>
@@ -72,6 +73,7 @@
          lat = 42.621790;
          lon = 2.435692;
         } else { //Bouleternère
+         weatherDepart = "Bouleternère"
          lat = 42.656854;
          lon = 2.585727;
         }
@@ -85,6 +87,7 @@
 
         const weatherDateFrench = weatherDate.toLocaleDateString("fr-FR", options);
         document.getElementById('pm').innerHTML = "Prévisions Météo : " + weatherDateFrench;
+        document.getElementById('dep').innerHTML = weatherDepart;
 
         const ctx = document.getElementById('weatherChart').getContext('2d');
         let chart;
