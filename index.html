@@ -60,7 +60,7 @@
         if (!dateParam) dateParam = new Date().toISOString().split('T')[0];
         
         const weatherDate = new Date(dateParam + "T07:00:00");
-        const weatherDepart = getQueryParam("depart");
+        let weatherDepart = getQueryParam("depart");
 
         let lat, lon;
         if (weatherDepart == "Corbère-les-Cabanes") {
