@@ -121,7 +121,11 @@
                     }
                 }
 
-                const labels = times.map(t => new Date(t).getHours().toString().padStart(2, '0') + 'h00');
+              } catch (error) {
+                console.error('Chart load error:', error);
+            }
+            
+              const labels = times.map(t => new Date(t).getHours().toString().padStart(2, '0') + 'h00');
                 //const tempMin = Math.min(...temps) - 2;
                 const tempMin = 0;
                 const tempMax = Math.max(...temps) + 2;
@@ -223,9 +227,6 @@
                     },
                     plugins: [ChartDataLabels]
                 });
-            } catch (error) {
-                console.error('Chart load error:', error);
-            }
         }
 
         loadWeatherChart();
