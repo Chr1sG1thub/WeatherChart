@@ -98,7 +98,7 @@
 
         async function loadWeatherChart() {
             try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,precipitation,windspeed_10m,winddirection_10m&start_date=${dataParam}&end_date=$dateParam}&timezone=auto`;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,precipitation,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=$dateParam}&timezone=auto`;
                 const response = await fetch(url);
                 const data = await response.json();
 
