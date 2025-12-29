@@ -105,7 +105,6 @@
 
                 let times = [];
                 let temps = [];
-                let precip = [];
                 let windSpeed = [];
                 let windDir = [];
             
@@ -131,6 +130,8 @@
                 console.error('Chart load error:', error);
             }
             
+                let precip = [];
+            
      const corners = [
         {lat: minLat, lon: minLon},  // SW
         {lat: minLat, lon: maxLon},  // SE  
@@ -140,7 +141,6 @@
 
     const latList = corners.map(c => c.lat).join(',');
     const lonList = corners.map(c => c.lon).join(',');
-    let precip[];
 
 
             try {
