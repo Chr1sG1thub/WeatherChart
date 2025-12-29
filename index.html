@@ -64,7 +64,12 @@
         const weatherDate = new Date(dateParam + "T07:00:00");
         let weatherDepart = getQueryParam("depart");
 
-        let lat, lon;
+    let latMin = getQueryParam("latmin");
+    let latMax = getQueryParam("latmax");
+    let lonMin = getQueryParam("lonmin");
+    let lonMax = getQueryParam("lonmax");
+        
+       let lat, lon;
         if (weatherDepart == "Corbère-les-Cabanes") {
          lat = 42.658135;
          lon = 2.677681;
@@ -105,7 +110,7 @@
                 let windDir = [];
             
             try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,precipitation,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
                 const response = await fetch(url);
                 const data = await response.json();
 
@@ -115,7 +120,7 @@
                     if (time >= weatherDate) {
                         times.push(data.hourly.time[i]);
                         temps.push(Math.round(data.hourly.temperature_2m[i]));
-                        precip.push(data.hourly.precipitation[i+1]);
+              //          precip.push(data.hourly.precipitation[i+1]);
                         windSpeed.push(data.hourly.windspeed_10m[i]);
                         windDir.push(data.hourly.winddirection_10m[i]);
                         j++;
@@ -126,7 +131,39 @@
                 console.error('Chart load error:', error);
             }
             
-              const labels = times.map(t => new Date(t).getHours().toString().padStart(2, '0') + 'h00');
+     const corners = [
+        {lat: minLat, lon: minLon},  // SW
+        {lat: minLat, lon: maxLon},  // SE  
+        {lat: maxLat, lon: minLon},  // NW
+        {lat: maxLat, lon: maxLon}   // NE
+    ];
+
+    const latList = corners.map(c => c.lat).join(',');
+    const lonList = corners.map(c => c.lon).join(',');
+    let precip[];
+
+
+            try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${latList}&longitude=${lonList}&hourly=precipitation&timezone=auto&start_date=${dateParam}&end_date=${dateParam}`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                let j = 0;
+                for (let i = 0; j < 6 && i < data.hourly.time.length; i++) {
+                    const time = new Date(data.hourly.time[i]);
+                    if (time >= weatherDate) {
+precip[j] = Math.max(data[0].hourly.precipitation[i+1], data[1].hourly.precipitation[i+1],data[2].hourly.precipitation[i+1],data[3].hourly.precipitation[i+1]);
+                        j++;
+                    }
+                }
+
+              } catch (error) {
+                console.error('Chart load error:', error);
+            }
+          
+
+            
+            const labels = times.map(t => new Date(t).getHours().toString().padStart(2, '0') + 'h00');
                 //const tempMin = Math.min(...temps) - 2;
                 const tempMin = 0;
                 const tempMax = Math.max(...temps) + 2;
