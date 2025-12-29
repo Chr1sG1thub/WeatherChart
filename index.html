@@ -114,7 +114,7 @@
                 const data = await response.json();
 
                 let j = 0;
-                for (let i = 0; j < 6 && i < data.hourly.time.length; i++) {
+                for (let i = 0; j < 7; i++) {
                     const time = new Date(data.hourly.time[i]);
                     if (time >= weatherDate) {
                         times.push(data.hourly.time[i]);
@@ -149,8 +149,8 @@
                 const data = await response.json();
 
                 let j = 0;
-                for (let i = 0; j < 6 && i < data.hourly.time.length; i++) {
-                    const time = new Date(data.hourly.time[i]);
+                for (let i = 0; j < 7; i++) {
+                    const time = new Date(data[0].hourly.time[i]);
                     if (time >= weatherDate) {
 precip[j] = Math.max(data[0].hourly.precipitation[i+1], data[1].hourly.precipitation[i+1],data[2].hourly.precipitation[i+1],data[3].hourly.precipitation[i+1]);
                         j++;
