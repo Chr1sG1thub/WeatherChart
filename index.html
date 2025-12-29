@@ -133,10 +133,10 @@
                 let precip = [];
             
      const corners = [
-        {lat: minLat, lon: minLon},  // SW
-        {lat: minLat, lon: maxLon},  // SE  
-        {lat: maxLat, lon: minLon},  // NW
-        {lat: maxLat, lon: maxLon}   // NE
+        {lat: latMin, lon: lonMin},  // SW
+        {lat: latMin, lon: lonMax},  // SE  
+        {lat: latMax, lon: lonMin},  // NW
+        {lat: latMax, lon: lonMax}   // NE
     ];
 
     const latList = corners.map(c => c.lat).join(',');
