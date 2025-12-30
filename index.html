@@ -64,27 +64,14 @@
         const weatherDate = new Date(dateParam + "T07:00:00");
         let weatherDepart = getQueryParam("depart");
 
-    let latMin = getQueryParam("latmin");
-    let latMax = getQueryParam("latmax");
-    let lonMin = getQueryParam("lonmin");
-    let lonMax = getQueryParam("lonmax");
-        
-       let lat, lon;
-        if (weatherDepart == "Corbère-les-Cabanes") {
-         lat = 42.658135;
-         lon = 2.677681;
-        } else if (weatherDepart == "Millas") {
-         lat = 42.692760;
-         lon = 2.687678;
-        } else if (weatherDepart == "Prades") {
-         lat = 42.621790;
-         lon = 2.435692;
-        } else { //Bouleternère
-         weatherDepart = "Bouleternère"
-         lat = 42.656854;
-         lon = 2.585727;
+    let lat=[];
+    let lon=[];
+    for (let i = 7; i<=13; i++) {
+        lat[i] = getQueryParam("lat"+i);
+        lon[i] = getQueryParam("lon"+i);
         }
-
+                
+ 
         const options = {
             weekday: "long",
             year: "numeric",
@@ -94,7 +81,7 @@
 
         const weatherDateFrench = weatherDate.toLocaleDateString("fr-FR", options);
         document.getElementById('pm').innerHTML = "Prévisions Météo : " + weatherDateFrench;
-        document.getElementById('dep').innerHTML = "<i>" + weatherDepart + "</i>";
+        document.getElementById('dep').innerHTML = "<i>Départ : " + weatherDepart + "</i>";
 
         const ctx = document.getElementById('weatherChart').getContext('2d');
         let chart;
@@ -107,60 +94,114 @@
                 let temps = [];
                 let windSpeed = [];
                 let windDir = [];
-            
-            try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
-                const response = await fetch(url);
-                const data = await response.json();
-
-                let j = 0;
-                for (let i = 0; j < 7; i++) {
-                    const time = new Date(data.hourly.time[i]);
-                    if (time >= weatherDate) {
-                        times.push(data.hourly.time[i]);
-                        temps.push(Math.round(data.hourly.temperature_2m[i]));
-              //          precip.push(data.hourly.precipitation[i+1]);
-                        windSpeed.push(data.hourly.windspeed_10m[i]);
-                        windDir.push(data.hourly.winddirection_10m[i]);
-                        j++;
-                    }
-                }
-
-              } catch (error) {
-                console.error('Chart load error:', error);
-            }
-            
                 let precip = [];
             
-     const corners = [
-        {lat: latMin, lon: lonMin},  // SW
-        {lat: latMin, lon: lonMax},  // SE  
-        {lat: latMax, lon: lonMin},  // NW
-        {lat: latMax, lon: lonMax}   // NE
-    ];
-
-    const latList = corners.map(c => c.lat).join(',');
-    const lonList = corners.map(c => c.lon).join(',');
-
-
             try {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${latList}&longitude=${lonList}&hourly=precipitation&timezone=auto&start_date=${dateParam}&end_date=${dateParam}`;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat[7]}&longitude=${lon[7]}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
                 const response = await fetch(url);
                 const data = await response.json();
 
-                let j = 0;
-                for (let i = 0; j < 7; i++) {
-                    const time = new Date(data[0].hourly.time[i]);
-                    if (time >= weatherDate) {
-precip[j] = Math.max(data[0].hourly.precipitation[i+1], data[1].hourly.precipitation[i+1],data[2].hourly.precipitation[i+1],data[3].hourly.precipitation[i+1]);
-                        j++;
-                    }
-                }
-
+                        times.push(data.hourly.time[7]);
+                        temps.push(Math.round(data.hourly.temperature_2m[7]));
+                        precip.push(data.hourly.precipitation[8]);
+                        windSpeed.push(data.hourly.windspeed_10m[7]);
+                        windDir.push(data.hourly.winddirection_10m[7]);
+  
               } catch (error) {
                 console.error('Chart load error:', error);
             }
-          
+            
+            try {
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat[8]}&longitude=${lon[8]}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                        times.push(data.hourly.time[8]);
+                        temps.push(Math.round(data.hourly.temperature_2m[8]));
+                        precip.push(data.hourly.precipitation[9]);
+                        windSpeed.push(data.hourly.windspeed_10m[8]);
+                        windDir.push(data.hourly.winddirection_10m[8]);
+  
+              } catch (error) {
+                console.error('Chart load error:', error);
+            }
+            
+            try {
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat[9]}&longitude=${lon[9]}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                        times.push(data.hourly.time[9]);
+                        temps.push(Math.round(data.hourly.temperature_2m[9]));
+                        precip.push(data.hourly.precipitation[10]);
+                        windSpeed.push(data.hourly.windspeed_10m[9]);
+                        windDir.push(data.hourly.winddirection_10m[9]);
+  
+              } catch (error) {
+                console.error('Chart load error:', error);
+            }
+            
+            try {
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat[10]}&longitude=${lon[10]}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                        times.push(data.hourly.time[10]);
+                        temps.push(Math.round(data.hourly.temperature_2m[10]));
+                        precip.push(data.hourly.precipitation[11]);
+                        windSpeed.push(data.hourly.windspeed_10m[10]);
+                        windDir.push(data.hourly.winddirection_10m[10]);
+  
+              } catch (error) {
+                console.error('Chart load error:', error);
+            }
+            
+            try {
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat[11]}&longitude=${lon[11]}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                        times.push(data.hourly.time[11]);
+                        temps.push(Math.round(data.hourly.temperature_2m[11]));
+                        precip.push(data.hourly.precipitation[12]);
+                        windSpeed.push(data.hourly.windspeed_10m[11]);
+                        windDir.push(data.hourly.winddirection_10m[11]);
+  
+              } catch (error) {
+                console.error('Chart load error:', error);
+            }
+            
+            try {
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat[12]}&longitude=${lon[12]}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                        times.push(data.hourly.time[12]);
+                        temps.push(Math.round(data.hourly.temperature_2m[12]));
+                        precip.push(data.hourly.precipitation[13]);
+                        windSpeed.push(data.hourly.windspeed_10m[12]);
+                        windDir.push(data.hourly.winddirection_10m[12]);
+  
+              } catch (error) {
+                console.error('Chart load error:', error);
+            }
+            
+            try {
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat[13]}&longitude=${lon[13]}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                        times.push(data.hourly.time[13]);
+                        temps.push(Math.round(data.hourly.temperature_2m[13]));
+                        precip.push(data.hourly.precipitation[14]);
+                        windSpeed.push(data.hourly.windspeed_10m[13]);
+                        windDir.push(data.hourly.winddirection_10m[13]);
+  
+              } catch (error) {
+                console.error('Chart load error:', error);
+            }
+            
+            
 
             
             const labels = times.map(t => new Date(t).getHours().toString().padStart(2, '0') + 'h00');
@@ -256,7 +297,7 @@ precip[j] = Math.max(data[0].hourly.precipitation[i+1], data[1].hourly.precipita
                         scales: {
                             x: {
                                 display: true,
-                                grid: { display: false },
+                                grid: { display: true },
                                 ticks: { maxRotation: 0, font: { size: 12, weight: 'bold' } }
                             },
                             y: { display: false, min: tempMin, max: tempMax },
