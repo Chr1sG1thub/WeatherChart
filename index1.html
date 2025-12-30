@@ -64,37 +64,14 @@
         const weatherDate = new Date(dateParam + "T07:00:00");
         let weatherDepart = getQueryParam("depart");
 
-    let lat7 = getQueryParam("lat7");
-    let lon7 = getQueryParam("lon7");
-    let lat8 = getQueryParam("lat8");
-    let lon8 = getQueryParam("lon8");
-    let lat9 = getQueryParam("lat9");
-    let lon9 = getQueryParam("lon9");
-    let lat10 = getQueryParam("lat10");
-    let lon10 = getQueryParam("lon10");
-    let lat11 = getQueryParam("lat11");
-    let lon11 = getQueryParam("lon11");
-    let lat12 = getQueryParam("lat12");
-    let lon12 = getQueryParam("lon12");
-    let lat13 = getQueryParam("lat13");
-    let lon13 = getQueryParam("lon13");
-        
-       let lat, lon;
-        if (weatherDepart == "Corbère-les-Cabanes") {
-         lat = 42.658135;
-         lon = 2.677681;
-        } else if (weatherDepart == "Millas") {
-         lat = 42.692760;
-         lon = 2.687678;
-        } else if (weatherDepart == "Prades") {
-         lat = 42.621790;
-         lon = 2.435692;
-        } else { //Bouleternère
-         weatherDepart = "Bouleternère"
-         lat = 42.656854;
-         lon = 2.585727;
+    let lat[];
+    let lon[];
+    for (let i = 7, i<=13, i++) {
+        lat[i] = getQueryParam("lat"+i);
+        lon[i] = getQueryParam("lon"+i);
         }
-
+                
+ 
         const options = {
             weekday: "long",
             year: "numeric",
@@ -120,7 +97,7 @@
                 let precip = [];
             
             try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat7}&longitude=${lon7}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat[7]}&longitude=${lon[7]}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
                 const response = await fetch(url);
                 const data = await response.json();
 
@@ -135,7 +112,7 @@
             }
             
             try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat8}&longitude=${lon8}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat[8]}&longitude=${lon[8]}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
                 const response = await fetch(url);
                 const data = await response.json();
 
@@ -150,7 +127,7 @@
             }
             
             try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat9}&longitude=${lon9}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat[9]}&longitude=${lon[9]}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
                 const response = await fetch(url);
                 const data = await response.json();
 
@@ -165,7 +142,7 @@
             }
             
             try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat10}&longitude=${lon10}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat[10]}&longitude=${lon[10]}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
                 const response = await fetch(url);
                 const data = await response.json();
 
@@ -180,7 +157,7 @@
             }
             
             try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat11}&longitude=${lon11}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat[11]}&longitude=${lon[11]}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
                 const response = await fetch(url);
                 const data = await response.json();
 
@@ -195,7 +172,7 @@
             }
             
             try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat12}&longitude=${lon12}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat[12]}&longitude=${lon[12]}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
                 const response = await fetch(url);
                 const data = await response.json();
 
@@ -210,7 +187,7 @@
             }
             
             try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat13}&longitude=${lon13}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat[13]}&longitude=${lon[13]}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
                 const response = await fetch(url);
                 const data = await response.json();
 
