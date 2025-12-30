@@ -64,8 +64,8 @@
         const weatherDate = new Date(dateParam + "T07:00:00");
         let weatherDepart = getQueryParam("depart");
 
-    let lat[];
-    let lon[];
+    let lat=[];
+    let lon=[];
     for (let i = 7, i<=13, i++) {
         lat[i] = getQueryParam("lat"+i);
         lon[i] = getQueryParam("lon"+i);
