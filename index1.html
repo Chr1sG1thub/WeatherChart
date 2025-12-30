@@ -104,7 +104,7 @@
 
         const weatherDateFrench = weatherDate.toLocaleDateString("fr-FR", options);
         document.getElementById('pm').innerHTML = "Prévisions Météo : " + weatherDateFrench;
-        document.getElementById('dep').innerHTML = "<i>" + weatherDepart + "</i>";
+        document.getElementById('dep').innerHTML = "<i>Départ : " + weatherDepart + "</i>";
 
         const ctx = document.getElementById('weatherChart').getContext('2d');
         let chart;
