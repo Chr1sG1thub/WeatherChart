@@ -124,21 +124,6 @@
                 const response = await fetch(url);
                 const data = await response.json();
 
-                        times.push(data.hourly.time[6]);
-                        temps.push(Math.round(data.hourly.temperature_2m[6]));
-                        precip.push(data.hourly.precipitation[7]);
-                        windSpeed.push(data.hourly.windspeed_10m[6]);
-                        windDir.push(data.hourly.winddirection_10m[6]);
-  
-              } catch (error) {
-                console.error('Chart load error:', error);
-            }
-            
-            try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat8}&longitude=${lon8}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
-                const response = await fetch(url);
-                const data = await response.json();
-
                         times.push(data.hourly.time[7]);
                         temps.push(Math.round(data.hourly.temperature_2m[7]));
                         precip.push(data.hourly.precipitation[8]);
@@ -150,7 +135,7 @@
             }
             
             try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat9}&longitude=${lon9}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat8}&longitude=${lon8}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
                 const response = await fetch(url);
                 const data = await response.json();
 
@@ -165,7 +150,7 @@
             }
             
             try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat10}&longitude=${lon10}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat9}&longitude=${lon9}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
                 const response = await fetch(url);
                 const data = await response.json();
 
@@ -180,7 +165,7 @@
             }
             
             try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat11}&longitude=${lon11}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat10}&longitude=${lon10}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
                 const response = await fetch(url);
                 const data = await response.json();
 
@@ -195,7 +180,7 @@
             }
             
             try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat12}&longitude=${lon12}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat11}&longitude=${lon11}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
                 const response = await fetch(url);
                 const data = await response.json();
 
@@ -210,7 +195,7 @@
             }
             
             try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat13}&longitude=${lon13}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat12}&longitude=${lon12}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
                 const response = await fetch(url);
                 const data = await response.json();
 
@@ -219,6 +204,21 @@
                         precip.push(data.hourly.precipitation[13]);
                         windSpeed.push(data.hourly.windspeed_10m[12]);
                         windDir.push(data.hourly.winddirection_10m[12]);
+  
+              } catch (error) {
+                console.error('Chart load error:', error);
+            }
+            
+            try {
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat13}&longitude=${lon13}&hourly=precipitation,temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                        times.push(data.hourly.time[13]);
+                        temps.push(Math.round(data.hourly.temperature_2m[13]));
+                        precip.push(data.hourly.precipitation[14]);
+                        windSpeed.push(data.hourly.windspeed_10m[13]);
+                        windDir.push(data.hourly.winddirection_10m[13]);
   
               } catch (error) {
                 console.error('Chart load error:', error);
