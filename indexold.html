@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prévisions Météo</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 48vh;
+            height: 70vh;
+            margin: 0 auto;
+        }
+
+        /*#weatherChart {
+             position: absolute;
+            top: 0;
+            left: 0;  
+                   position: relative;
+           margin: auto;
+            width: 90%;
+     width: 90%; 
+            height: 90%;
+        }*/
+    </style>
+</head>
+
+<body>
+
+    <h2 style="text-align: center" id="pm"></h2>
+    <h3 style="text-align: center" id="dep"></h3>
+    <div class="chart-container">
+        <canvas id="weatherChart"></canvas>
+    </div>
+<p style="text-align: center; font-size: 8pt"><i>La valeur des précipitations affichée à 10h00 (par exemple) correspond aux prévisions de pluie entre 10h00 et 11h00.</i></p>
+<p style="text-align: center; font-size: 8pt"><i>Données météorologiques fournies par <a href="https://open-meteo.com">https://open-meteo.com</a></i></p>
+    
+    <script>
+
+        function getQueryParam(name) {
+            const value = new URLSearchParams(window.location.search).get(name);
+            //      console.log(`Query param "${name}":`, value);
+            return value;
+        }
+
+        function degToCompass(deg) {
+            const dirs = ['⬇️', '↙️', '⬅️', '↖️', '⬆️', '↗️', '➡️', '↘️'];
+            return dirs[Math.round(deg / 45) % 8];
+        }
+
+        let dateParam = getQueryParam("date");
+        if (!dateParam) dateParam = new Date().toISOString().split('T')[0];
+        
+        const weatherDate = new Date(dateParam + "T07:00:00");
+        let weatherDepart = getQueryParam("depart");
+
+    let latMin = getQueryParam("latmin");
+    let latMax = getQueryParam("latmax");
+    let lonMin = getQueryParam("lonmin");
+    let lonMax = getQueryParam("lonmax");
+        
+       let lat, lon;
+        if (weatherDepart == "Corbère-les-Cabanes") {
+         lat = 42.658135;
+         lon = 2.677681;
+        } else if (weatherDepart == "Millas") {
+         lat = 42.692760;
+         lon = 2.687678;
+        } else if (weatherDepart == "Prades") {
+         lat = 42.621790;
+         lon = 2.435692;
+        } else { //Bouleternère
+         weatherDepart = "Bouleternère"
+         lat = 42.656854;
+         lon = 2.585727;
+        }
+
+        const options = {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        };
+
+        const weatherDateFrench = weatherDate.toLocaleDateString("fr-FR", options);
+        document.getElementById('pm').innerHTML = "Prévisions Météo : " + weatherDateFrench;
+        document.getElementById('dep').innerHTML = "<i>" + weatherDepart + "</i>";
+
+        const ctx = document.getElementById('weatherChart').getContext('2d');
+        let chart;
+
+        Chart.register(ChartDataLabels);
+
+        async function loadWeatherChart() {
+
+                let times = [];
+                let temps = [];
+                let windSpeed = [];
+                let windDir = [];
+            
+            try {
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,windspeed_10m,winddirection_10m&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                let j = 0;
+                for (let i = 0; j < 7; i++) {
+                    const time = new Date(data.hourly.time[i]);
+                    if (time >= weatherDate) {
+                        times.push(data.hourly.time[i]);
+                        temps.push(Math.round(data.hourly.temperature_2m[i]));
+              //          precip.push(data.hourly.precipitation[i+1]);
+                        windSpeed.push(data.hourly.windspeed_10m[i]);
+                        windDir.push(data.hourly.winddirection_10m[i]);
+                        j++;
+                    }
+                }
+
+              } catch (error) {
+                console.error('Chart load error:', error);
+            }
+            
+                let precip = [];
+            
+     const corners = [
+        {lat: latMin, lon: lonMin},  // SW
+        {lat: latMin, lon: lonMax},  // SE  
+        {lat: latMax, lon: lonMin},  // NW
+        {lat: latMax, lon: lonMax}   // NE
+    ];
+
+    const latList = corners.map(c => c.lat).join(',');
+    const lonList = corners.map(c => c.lon).join(',');
+
+
+            try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${latList}&longitude=${lonList}&hourly=precipitation&timezone=auto&start_date=${dateParam}&end_date=${dateParam}`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                let j = 0;
+                for (let i = 0; j < 7; i++) {
+                    const time = new Date(data[0].hourly.time[i]);
+                    if (time >= weatherDate) {
+precip[j] = Math.max(data[0].hourly.precipitation[i+1], data[1].hourly.precipitation[i+1],data[2].hourly.precipitation[i+1],data[3].hourly.precipitation[i+1]);
+                        j++;
+                    }
+                }
+
+              } catch (error) {
+                console.error('Chart load error:', error);
+            }
+          
+
+            
+            const labels = times.map(t => new Date(t).getHours().toString().padStart(2, '0') + 'h00');
+                //const tempMin = Math.min(...temps) - 2;
+                const tempMin = 0;
+                const tempMax = Math.max(...temps) + 2;
+                const windMax = Math.max(...windSpeed, ...precip) + 5;
+
+                if (chart) chart.destroy();
+
+                chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            type: 'line',
+                            label: 'Temp °C',
+                            data: temps,
+                            borderColor: 'rgb(255, 99, 132)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderWidth: 3,
+                            fill: false,
+                            tension: 0.4,
+                            yAxisID: 'y',
+                            datalabels: {
+                                color: '#d63384',
+                                font: { weight: 'bold', size: 14 },
+                                formatter: (value) => value.toFixed(0),
+                                anchor: 'end',
+                                align: 'top',
+                                offset: 6,
+                                backgroundColor: 'rgba(255,255,255,0.9)',
+                                borderRadius: 3,
+                                padding: 2
+                            }
+                        }, {
+                            type: 'bar',
+                            label: 'Pluie mm',
+                            data: precip,
+                            minBarLength: 2,
+                            backgroundColor: 'rgba(54, 162, 235, 0.9)',
+                            yAxisID: 'y1',
+                            barPercentage: 0.6,
+                            categoryPercentage: 0.4,
+                            datalabels: {
+                                color: 'darkblue',
+                                font: { weight: 'bold', size: 14 },
+                                formatter: (value) => value.toFixed(1),
+                                anchor: 'end',
+                                align: 'top',
+                                offset: 4,
+                                backgroundColor: 'rgba(255,255,255,0.9)',
+                                borderRadius: 3,
+                                padding: 2
+                            }
+                        }, {
+                            type: 'line',
+                            label: 'Vent km/h',
+                            data: windSpeed,
+                            borderColor: 'rgb(75, 192, 192)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderWidth: 3,
+                            fill: false,
+                            tension: 0.4,
+                            yAxisID: 'y1',
+                            datalabels: {
+                                color: '#0d9488',
+                                font: { weight: 'bold', size: 14 },
+                                formatter: function (value, context) {
+                                    const windDirection = windDir[context.dataIndex];
+                                    const direction = degToCompass(windDirection);
+                                    return value.toFixed(0) + direction;
+                                },
+                                anchor: 'end',
+                                align: 'top',
+                                offset: 6,
+                                backgroundColor: 'rgba(255,255,255,0.9)',
+                                borderRadius: 3,
+                                padding: 2
+                            }
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: { top: 20 }
+                        },
+                        plugins: {
+                            legend: { display: true, position: 'top' },
+                            datalabels: { display: true, clamp: true }
+                        },
+                        scales: {
+                            x: {
+                                display: true,
+                                grid: { display: false },
+                                ticks: { maxRotation: 0, font: { size: 12, weight: 'bold' } }
+                            },
+                            y: { display: false, min: tempMin, max: tempMax },
+                            y1: { display: false, min: 0, max: windMax }
+                        }
+                    },
+                    plugins: [ChartDataLabels]
+                });
+        }
+
+        loadWeatherChart();
+    </script>
+</body>
+</>
