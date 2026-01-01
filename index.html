@@ -192,23 +192,41 @@
                             fill: false,
                             tension: 0.0,
                             yAxisID: 'y1',
-datalabels: {
-    color: '#0d9488',
-    font: { weight: 'bold', size: 14 },
-    formatter: function (value, context) {
-        return value.toFixed(0) + ' ➡️';  // Speed + base right-pointing arrow
+datalabels: [
+    // Speed text (no rotation, left-aligned)
+    {
+        color: '#0d9488',
+        font: { weight: 'bold', size: 14 },
+        formatter: (value) => value.toFixed(0),
+        anchor: 'end',
+        align: 'top',
+        offset: 6,
+        rotation: 0,  // Explicitly no rotation
+        backgroundColor: 'rgba(255,255,255,0.9)',
+        borderRadius: 3,
+        padding: 2,
+        textStrokeWidth: 0
     },
-    rotation: function(context) {
-        const windDirection = windDir[context.dataIndex];
-        return (windDirection - 90) * Math.PI / 180;  // Radians: -90° offset so 0°=up (North)
-    },
-    anchor: 'end',
-    align: 'top',
-    offset: 6,
-    backgroundColor: 'rgba(255,255,255,0.9)',
-    borderRadius: 3,
-    padding: 2
-}
+    // Rotated arrow only (right of text)
+    {
+        color: '#0d9488',
+        font: { weight: 'bold', size: 16 },  // Slightly larger for visibility
+        formatter: function(context) {
+            const windDirection = windDir[context.dataIndex];
+            return '➡️';  // Base right arrow
+        },
+        rotation: function(context) {
+            const windDirection = windDir[context.dataIndex];
+            return (windDirection - 90) * Math.PI / 180;  // Rotate to point correctly
+        },
+        anchor: 'end',
+        align: 'right',  // Positions right of anchor point
+        offset: 12,  // Slight right shift from text
+        backgroundColor: 'transparent',  // No bg on arrow for clean look
+        padding: 0
+    }
+]
+
                         }]
                     },
                     options: {
