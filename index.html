@@ -192,21 +192,23 @@
                             fill: false,
                             tension: 0.0,
                             yAxisID: 'y1',
-                            datalabels: {
-                                color: '#0d9488',
-                                font: { weight: 'bold', size: 14 },
-                                formatter: function (value, context) {
-                                    const windDirection = windDir[context.dataIndex];
-                                    const direction = degToCompass(windDirection);
-                                    return value.toFixed(0) + direction;
-                                },
-                                anchor: 'end',
-                                align: 'top',
-                                offset: 6,
-                                backgroundColor: 'rgba(255,255,255,0.9)',
-                                borderRadius: 3,
-                                padding: 2
-                            }
+datalabels: {
+    color: '#0d9488',
+    font: { weight: 'bold', size: 14 },
+    formatter: function (value, context) {
+        return value.toFixed(0) + ' ➡️';  // Speed + base right-pointing arrow
+    },
+    rotation: function(context) {
+        const windDirection = windDir[context.dataIndex];
+        return (windDirection - 90) * Math.PI / 180;  // Radians: -90° offset so 0°=up (North)
+    },
+    anchor: 'end',
+    align: 'top',
+    offset: 6,
+    backgroundColor: 'rgba(255,255,255,0.9)',
+    borderRadius: 3,
+    padding: 2
+}
                         }]
                     },
                     options: {
