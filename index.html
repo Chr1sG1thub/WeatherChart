@@ -55,7 +55,7 @@
 
         function degToCompass(deg) {
             const dirs = ['⬇️', '↙️', '⬅️', '↖️', '⬆️', '↗️', '➡️', '↘️'];
-            return "<span>"+dirs[Math.round(deg / 45) % 8]+"</span>";
+            return dirs[Math.round(deg / 45) % 8];
         }
 
         let dateParam = getQueryParam("date");
@@ -217,7 +217,19 @@
                         },
                         plugins: {
                             legend: { display: true, position: 'top' },
-                            datalabels: { display: true, clamp: true }
+                            datalabels: { display: true, clamp: true },
+                            tooltip: {
+    callbacks: {
+        afterLabel: function(context) {
+            if (context.datasetIndex === 2) {  // Wind dataset index (0=temp,1=precip,2=wind)
+                const dir = windDir[context.dataIndex];
+                return `Direction: ${Math.round((dir+180)%360)}°`;
+            }
+            return '';
+        }
+    }
+}
+
                         },
                         scales: {
                             x: {
