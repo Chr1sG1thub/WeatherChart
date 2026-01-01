@@ -217,19 +217,7 @@
                         },
                         plugins: {
                             legend: { display: true, position: 'top' },
-                            datalabels: { display: true, clamp: true },
-                            tooltip: {
-    callbacks: {
-        afterLabel: function(context) {
-            if (context.datasetIndex === 2) {  // Wind dataset index (0=temp,1=precip,2=wind)
-                const dir = windDir[context.dataIndex];
-                return `Direction: ${Math.round((dir+180)%360)}°`;
-            }
-            return '';
-        }
-    }
-}
-
+                            datalabels: { display: true, clamp: true }
                         },
                         scales: {
                             x: {
