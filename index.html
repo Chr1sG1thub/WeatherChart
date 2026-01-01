@@ -55,7 +55,7 @@
 
         function degToCompass(deg) {
             const dirs = ['⬇️', '↙️', '⬅️', '↖️', '⬆️', '↗️', '➡️', '↘️'];
-            return dirs[Math.round(deg / 45) % 8];
+            return <span>dirs[Math.round(deg / 45) % 8]</span>;
         }
 
         let dateParam = getQueryParam("date");
