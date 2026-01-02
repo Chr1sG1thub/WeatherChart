@@ -134,7 +134,7 @@
                 const tempMin = /*Math.min(...temps) - 2*/ 0;
                 const tempMax = Math.max(...temps);
                 const windMin = /*Math.min(Math.min(...windSpeed), Math.min(...precip)) - 5*/ 0;
-                const windMax = Math.max(Math.max(...windSpeed), Math.max(...precip));
+                const windMax = Math.max(Math.max(...windSpeed), Math.max(...precip)) + 5;
      
                 if (chart) chart.destroy();
 
