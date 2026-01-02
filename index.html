@@ -132,9 +132,9 @@
             const labels = times.map(t => new Date(t).getHours().toString().padStart(2, '0') + 'h00');
                 //const tempMin = Math.min(...temps) - 2;
                 const tempMin = /*Math.min(...temps) - 2*/ 0;
-                const tempMax = Math.max(...temps) + 2;
+                const tempMax = Math.max(...temps);
                 const windMin = /*Math.min(Math.min(...windSpeed), Math.min(...precip)) - 5*/ 0;
-                const windMax = Math.max(Math.max(...windSpeed), Math.max(...precip)) + 5;
+                const windMax = Math.max(Math.max(...windSpeed), Math.max(...precip));
      
                 if (chart) chart.destroy();
 
