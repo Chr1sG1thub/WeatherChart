@@ -107,7 +107,7 @@
         // Single API call for ALL coordinates + all variables
         const latList = coords.map(c => c.lat).join(',');
         const lonList = coords.map(c => c.lon).join(',');
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${latList}&longitude=${lonList}&hourly=temperature_2m,windspeed_10m,winddirection_10m,precipitation&hourly=temperature_2m,windspeed_10m,winddirection_10m,precipitation&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${latList}&longitude=${lonList}&current=temperature_2m,windspeed_10m,winddirection_10m,precipitation&hourly=temperature_2m,windspeed_10m,winddirection_10m,precipitation&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
         
         const response = await fetch(url);
         const dataArray = await response.json();  // Array of 7 location objects
