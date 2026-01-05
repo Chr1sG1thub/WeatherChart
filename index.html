@@ -38,6 +38,7 @@
 <body>
     <h2 style="text-align: center" id="pm"></h2>
     <h3 style="text-align: center" id="dep"></h3>
+    <h4 style="text-align: center" id="ma"></h4>
     <div class="chart-container">
         <canvas id="weatherChart"></canvas>
     </div>
@@ -112,7 +113,8 @@
         const response = await fetch(url);
         const dataArray = await response.json();  // Array of 7 location objects
 
-        console.log(dataArray[0].current.temperature_2m, dataArray[0].current.windspeed_10m, dataArray[0].current.winddirection_10m, dataArray[0].current.precipitation); 
+        document.getElementById('ma').innerHTML = `(Météo Actuelle : ${dataArray[0].current.temperature_2m}°C, ${dataArray[0].current.windspeed_10m}km/h`;
+      // console.log(dataArray[0].current.temperature_2m, dataArray[0].current.windspeed_10m, dataArray[0].current.winddirection_10m, dataArray[0].current.precipitation); 
         
         // Extract data for each time slot (7 locations × 7 hours)
         for (let locIdx = 0; locIdx < coords.length; locIdx++) {
