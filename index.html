@@ -111,6 +111,8 @@
         
         const response = await fetch(url);
         const dataArray = await response.json();  // Array of 7 location objects
+
+        console.log(dataArray[0].current.temperature_2m, dataArray[0].current.windspeed_10m, dataArray[0].current.winddirection_10m, dataArray[0].current.precipitation); 
         
         // Extract data for each time slot (7 locations × 7 hours)
         for (let locIdx = 0; locIdx < coords.length; locIdx++) {
