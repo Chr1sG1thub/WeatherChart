@@ -181,7 +181,7 @@
                     windC = windBot - windM * windMin;
                 }
 
-                const windPlot = wind.map(v => windM * v + windC);
+                const windPlot = windSpeed.map(v => windM * v + windC);
      
                if (chart) chart.destroy();
 
