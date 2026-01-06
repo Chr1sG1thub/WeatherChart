@@ -154,7 +154,7 @@
                             borderWidth: 3,
                             fill: false,
                             tension: 0.4,
-                            yAxisID: 'y',
+                            yAxisID: 'y_temp',
                             datalabels: {
                                 color: '#d63384',
                                 font: { weight: 'bold', size: 14 },
@@ -172,7 +172,7 @@
                             data: precip,
                             minBarLength: 2,
                             backgroundColor: 'rgba(54, 162, 235, 0.9)',
-                            yAxisID: 'y1',
+                            yAxisID: 'y_rain',
                             barPercentage: 0.6,
                             categoryPercentage: 0.4,
                             datalabels: {
@@ -195,7 +195,7 @@
                             borderWidth: 3,
                             fill: false,
                             tension: 0.4,
-                            yAxisID: 'y1',
+                            yAxisID: 'y_wind',
                            datalabels: {
                                 color: '#0d9488',
                                 font: { weight: 'bold', size: 14 },
@@ -229,8 +229,9 @@
                                 grid: { display: true },
                                 ticks: { maxRotation: 0, font: { size: 12, weight: 'bold' } }
                             },
-                            y: { display: false, min: tempMin, max: tempMax*2 },
-                            y1: { display: false, min: windMin, max: windMax }
+                            y_temp: { display: false, min: tempMin, max: tempMax*2 },
+                            y_rain: { display: false, min: 0, max: 5 },
+                            y_rain: { display: false, min: windMin, max: windMax }
                         }
                     },
                     plugins: [ChartDataLabels]
