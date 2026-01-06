@@ -149,12 +149,41 @@
 
                 const tempsPlot = temps.map(v => tempM * v + tempC);
      
-                const rainMin = Math.min(...precip);
-                const rainMax = Math.max(...precip);
+                const precipMin = Math.min(...precip);
+                const precipMax = Math.max(...precip);
+     
+                const precipBot = 0;
+                const precipTop = 25;
+                let precipM;
+                let precipC;
+                if (precipMin == precipMax) {
+                    precipM = 0;
+                    precipC = (precipBot + precipTop) / 2;
+                } else {
+                    precipM = (precipTop - precipBot) / (precipMax - precipMin);
+                    precipC = precipBot - precipM * precipMin;
+                }
+
+                const precipPlot = precip.map(v => precipM * v + precipC);
+     
                 const windMin = Math.min(...windSpeed);
                 const windMax = Math.max(...windSpeed);
      
-                if (chart) chart.destroy();
+                const windBot = 60;
+                const windTop = 85;
+                let windM;
+                let windC;
+                if (windMin == windMax) {
+                    windM = 0;
+                    windC = (windBot + windTop) / 2;
+                } else {
+                    windM = (windTop - windBot) / (windMax - windMin);
+                    windC = windBot - windM * windMin;
+                }
+
+                const windPlot = wind.map(v => windM * v + windC);
+     
+               if (chart) chart.destroy();
 
                 chart = new Chart(ctx, {
                     type: 'bar',
@@ -175,7 +204,7 @@
                                 font: { weight: 'bold', size: 14 },
                                 formatter: (value, ctx) => {
         const i = ctx.dataIndex;
-        return temps[i]; // original value as label
+        return temps[i].toFixed(0); // original value as label
       },
                                 anchor: 'end',
                                 align: 'top',
@@ -187,7 +216,7 @@
                         }, {
                             type: 'bar',
                             label: 'Pluie mm',
-                            data: precip,
+                            data: precipPlot,
                             minBarLength: 2,
                             backgroundColor: 'rgba(54, 162, 235, 0.9)',
                             yAxisID: 'y_rain',
@@ -196,8 +225,10 @@
                             datalabels: {
                                 color: 'darkblue',
                                 font: { weight: 'bold', size: 14 },
-                                formatter: (value) => value.toFixed(1),
-                                anchor: 'end',
+    formatter: (value, ctx) => {
+        const i = ctx.dataIndex;
+        return precip[i].toFixed(1); // original value as label
+      },                             anchor: 'end',
                                 align: 'top',
                                 offset: 4,
                                 backgroundColor: 'rgba(255,255,255,0.9)',
@@ -207,7 +238,7 @@
                         }, {
                             type: 'line',
                             label: 'Vent km/h',
-                            data: windSpeed,
+                            data: windPlot,
                             borderColor: 'rgb(75, 192, 192)',
                             backgroundColor: 'rgba(75, 192, 192, 0.2)',
                             borderWidth: 3,
@@ -220,7 +251,7 @@
                                 formatter: function (value, context) {
                                     const windDirection = windDir[context.dataIndex];
                                     const direction = degToCompass(windDirection);
-                                    return value.toFixed(0) + direction;
+                                    return windSpeed[context.dataIndex].toFixed(0) + direction;
                                 },
                                 anchor: 'end',
                                 align: 'top',
