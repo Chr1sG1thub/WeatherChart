@@ -158,7 +158,11 @@
                 let precipC;
                 if (precipMin == precipMax) {
                     precipM = 0;
-                    precipC = (precipBot + precipTop) / 2;
+                    if (precipMin == 0) {
+                        precipC = 0;
+                    } else {
+                        precipC = (precipBot + precipTop) / 2;
+                    }
                 } else {
                     precipM = (precipTop - precipBot) / (precipMax - precipMin);
                     precipC = precipBot - precipM * precipMin;
