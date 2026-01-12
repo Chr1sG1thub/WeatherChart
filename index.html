@@ -128,7 +128,7 @@ function getCurrentDateTime() {
 
         const current = getCurrentDateTime();
 
-        document.getElementById('ma').innerHTML = `(Météo Actuelle (${current}): ${dataArray[0].current.temperature_2m.toFixed(0)}°C, ${dataArray[0].current.windspeed_10m.toFixed(0)}km/h ${degToCompass(dataArray[0].current.winddirection_10m)})`;
+        document.getElementById('ma').innerHTML = `(Météo Actuelle à ${current} : ${dataArray[0].current.temperature_2m.toFixed(0)}°C, ${dataArray[0].current.windspeed_10m.toFixed(0)}km/h ${degToCompass(dataArray[0].current.winddirection_10m)})`;
       // console.log(dataArray[0].current.temperature_2m, dataArray[0].current.windspeed_10m, dataArray[0].current.winddirection_10m, dataArray[0].current.precipitation); 
         
         // Extract data for each time slot (7 locations × 7 hours)
