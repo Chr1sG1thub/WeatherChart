@@ -47,6 +47,19 @@
     
     <script>
 
+function getCurrentDateTime() {
+  const d = new Date();
+
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0"); // 0-based
+  const year = d.getFullYear();
+
+  const hours = String(d.getHours()).padStart(2, "0");
+  const minutes = String(d.getMinutes()).padStart(2, "0");
+
+  return `${day}/${month}/${year} ${hours}h${minutes}`;
+}
+
         function getQueryParam(name) {
             const value = new URLSearchParams(window.location.search).get(name);
             //      console.log(`Query param "${name}":`, value);
@@ -113,7 +126,9 @@
         const response = await fetch(url);
         const dataArray = await response.json();  // Array of 7 location objects
 
-        document.getElementById('ma').innerHTML = `(Météo Actuelle : ${dataArray[0].current.temperature_2m.toFixed(0)}°C, ${dataArray[0].current.windspeed_10m.toFixed(0)}km/h ${degToCompass(dataArray[0].current.winddirection_10m)})`;
+        const current = getCurrentDateTime();
+
+        document.getElementById('ma').innerHTML = `(Météo Actuelle (${current}): ${dataArray[0].current.temperature_2m.toFixed(0)}°C, ${dataArray[0].current.windspeed_10m.toFixed(0)}km/h ${degToCompass(dataArray[0].current.winddirection_10m)})`;
       // console.log(dataArray[0].current.temperature_2m, dataArray[0].current.windspeed_10m, dataArray[0].current.winddirection_10m, dataArray[0].current.precipitation); 
         
         // Extract data for each time slot (7 locations × 7 hours)
