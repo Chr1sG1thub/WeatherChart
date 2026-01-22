@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prévisions Météo</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 48vh;
+            height: 60vh;
+            margin: 0 auto;
+        }
+
+        /*#weatherChart {
+             position: absolute;
+            top: 0;
+            left: 0;  
+                   position: relative;
+           margin: auto;
+            width: 90%;
+     width: 90%; 
+            height: 90%;
+        }*/
+    </style>
+</head>
+
+<body>
+<!--    <h2 style="text-align: center" id="pm"></h2>
+    <h3 style="text-align: center" id="dep"></h3>
+    <h4 style="text-align: center" id="ma"></h4> -->
+    <div class="chart-container">
+        <canvas id="weatherChart"></canvas>
+    </div>
+<!--<p style="text-align: center; font-size: 8pt"><i>La valeur des précipitations affichée à 10h00 (par exemple) correspond aux prévisions de pluie entre 10h00 et 11h00.</i></p>
+<p style="text-align: center; font-size: 8pt"><i>Données météorologiques fournies par <a href="https://open-meteo.com">https://open-meteo.com</a></i></p>-->
+    
+    <script>
+
+function getCurrentDateTime() {
+  const d = new Date();
+
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0"); // 0-based
+  const year = d.getFullYear();
+
+  const hours = String(d.getHours()).padStart(2, "0");
+  const minutes = String(d.getMinutes()).padStart(2, "0");
+
+  return `${day}/${month}/${year} ${hours}h${minutes}`;
+}
+
+        function getQueryParam(name) {
+            const value = new URLSearchParams(window.location.search).get(name);
+            //      console.log(`Query param "${name}":`, value);
+            return value;
+        }
+
+        function degToCompass(deg) {
+            const dirs = ['⬇️', '↙️', '⬅️', '↖️', '⬆️', '↗️', '➡️', '↘️'];
+            return dirs[Math.round(deg / 45) % 8];
+        }
+
+        let dateParam = getQueryParam("date");
+        if (!dateParam) dateParam = new Date().toISOString().split('T')[0];
+        
+        const weatherDate = new Date(dateParam + "T07:00:00");
+        let weatherDepart = getQueryParam("depart");
+
+    let lat=[];
+    let lon=[];
+    for (let i = 7; i<=13; i++) {
+        lat[i] = getQueryParam("lat"+i);
+        lon[i] = getQueryParam("lon"+i);
+        }
+                
+ 
+        const options = {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        };
+
+        const weatherDateFrench = weatherDate.toLocaleDateString("fr-FR", options);
+//        document.getElementById('pm').innerHTML = "Prévisions Météo : " + weatherDateFrench;
+ //       document.getElementById('dep').innerHTML = "<i>Départ : " + weatherDepart + "</i>";
+
+        const ctx = document.getElementById('weatherChart').getContext('2d');
+        let chart;
+
+        Chart.register(ChartDataLabels);
+
+ async function loadWeatherChart() {
+    let times = [], temps = [], windSpeed = [], windDir = [], precip = [];
+    
+    // Collect valid coordinates from query params
+    const coords = [];
+    for (let i = 7; i <= 13; i++) {
+        const l = getQueryParam(`lat${i}`);
+        const lo = getQueryParam(`lon${i}`);
+        if (l && lo) coords.push({lat: parseFloat(l), lon: parseFloat(lo)});
+    }
+    
+    if (coords.length === 0) {
+        console.error('No valid coordinates found');
+        return;
+    }
+
+    try {
+        // Single API call for ALL coordinates + all variables
+        const latList = coords.map(c => c.lat).join(',');
+        const lonList = coords.map(c => c.lon).join(',');
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${latList}&longitude=${lonList}&current=temperature_2m,windspeed_10m,winddirection_10m,precipitation&hourly=temperature_2m,windspeed_10m,winddirection_10m,precipitation&start_date=${dateParam}&end_date=${dateParam}&timezone=auto`;
+        
+        const response = await fetch(url);
+        const dataArray = await response.json();  // Array of 7 location objects
+
+        const current = getCurrentDateTime();
+
+//        document.getElementById('ma').innerHTML = `(Météo Actuelle à ${current} : ${dataArray[0].current.temperature_2m.toFixed(0)}°C, ${dataArray[0].current.windspeed_10m.toFixed(0)}km/h ${degToCompass(dataArray[0].current.winddirection_10m)})`;
+      // console.log(dataArray[0].current.temperature_2m, dataArray[0].current.windspeed_10m, dataArray[0].current.winddirection_10m, dataArray[0].current.precipitation); 
+        
+        // Extract data for each time slot (7 locations × 7 hours)
+        for (let locIdx = 0; locIdx < coords.length; locIdx++) {
+            const data = dataArray[locIdx].hourly;
+            times.push(data.time[7 + locIdx]);  // Hour 7,8,9,10,11,12,13
+            temps.push(Math.round(data.temperature_2m[7 + locIdx]));
+            precip.push(data.precipitation[8 + locIdx]);  // Next hour precip
+            windSpeed.push(data.windspeed_10m[7 + locIdx]);
+            windDir.push(data.winddirection_10m[7 + locIdx]);
+        }
+        
+    } catch (error) {
+        console.error('Weather fetch error:', error);
+    }
+    
+
+            
+            const labels = times.map(t => new Date(t).getHours().toString().padStart(2, '0') + 'h00');
+                const tempMin = Math.min(...temps);
+                const tempMax = Math.max(...temps);
+                const tempBot = 25;
+                const tempTop = 55;
+                let tempM;
+                let tempC;
+                if (tempMin == tempMax) {
+                    tempM = 0;
+                    tempC = (tempBot + tempTop) / 2;
+                } else {
+                    tempM = (tempTop - tempBot) / (tempMax - tempMin);
+                    tempC = tempBot - tempM * tempMin;
+                }
+
+                const tempsPlot = temps.map(v => tempM * v + tempC);
+     
+                const precipMin = Math.min(...precip);
+                const precipMax = Math.max(...precip);
+     
+                const precipBot = 0;
+                const precipTop = 15;
+                let precipM;
+                let precipC;
+                if (precipMin == precipMax) {
+                    precipM = 0;
+                    if (precipMin == 0) {
+                        precipC = 0;
+                    } else {
+                        precipC = (precipBot + precipTop) / 2;
+                    }
+                } else {
+                    precipM = (precipTop - precipBot) / (precipMax - precipMin);
+                    precipC = precipBot - precipM * precipMin;
+                }
+
+                const precipPlot = precip.map(v => precipM * v + precipC);
+     
+                const windMin = Math.min(...windSpeed);
+                const windMax = Math.max(...windSpeed);
+     
+                const windBot = 65;
+                const windTop = 93;
+                let windM;
+                let windC;
+                if (windMin == windMax) {
+                    windM = 0;
+                    windC = (windBot + windTop) / 2;
+                } else {
+                    windM = (windTop - windBot) / (windMax - windMin);
+                    windC = windBot - windM * windMin;
+                }
+
+                const windPlot = windSpeed.map(v => windM * v + windC);
+     
+               if (chart) chart.destroy();
+
+                chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            type: 'line',
+                            label: 'Temp °C',
+                            data: tempsPlot,
+                            borderColor: 'rgb(255, 99, 132)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderWidth: 3,
+                            fill: false,
+                            tension: 0.4,
+                            yAxisID: 'y_temp',
+                            datalabels: {
+                                color: '#d63384',
+                                font: { weight: 'bold', size: 14 },
+                                formatter: (value, ctx) => {
+        const i = ctx.dataIndex;
+        return temps[i].toFixed(0); // original value as label
+      },
+                                anchor: 'end',
+                                align: 'top',
+                                offset: 6,
+                                backgroundColor: 'rgba(255,255,255,0.9)',
+                                borderRadius: 3,
+                                padding: 2
+                            }
+                        }, {
+                            type: 'bar',
+                            label: 'Pluie mm',
+                            data: precipPlot,
+                            minBarLength: 2,
+                            backgroundColor: 'rgba(54, 162, 235, 0.9)',
+                            yAxisID: 'y_rain',
+                            barPercentage: 0.6,
+                            categoryPercentage: 0.4,
+                            datalabels: {
+                                color: 'darkblue',
+                                font: { weight: 'bold', size: 14 },
+    formatter: (value, ctx) => {
+        const i = ctx.dataIndex;
+        return precip[i].toFixed(1); // original value as label
+      },                             anchor: 'end',
+                                align: 'top',
+                                offset: 4,
+                                backgroundColor: 'rgba(255,255,255,0.9)',
+                                borderRadius: 3,
+                                padding: 2
+                            }
+                        }, {
+                            type: 'line',
+                            label: 'Vent km/h',
+                            data: windPlot,
+                            borderColor: 'rgb(75, 192, 192)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderWidth: 3,
+                            fill: false,
+                            tension: 0.4,
+                            yAxisID: 'y_wind',
+                           datalabels: {
+                                color: '#0d9488',
+                                font: { weight: 'bold', size: 14 },
+                                formatter: function (value, context) {
+                                    const windDirection = windDir[context.dataIndex];
+                                    const direction = degToCompass(windDirection);
+                                    return windSpeed[context.dataIndex].toFixed(0) + direction;
+                                },
+                                anchor: 'end',
+                                align: 'top',
+                                offset: 6,
+                                backgroundColor: 'rgba(255,255,255,0.9)',
+                                borderRadius: 3,
+                                padding: 2
+                            }
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: { top: 20 }
+                        },
+                        plugins: {
+                            legend: { display: true, position: 'top' },
+                            datalabels: { display: true, clamp: true }
+                        },
+                        scales: {
+                            x: {
+                                display: true,
+                                grid: { display: true },
+                                ticks: { maxRotation: 0, font: { size: 12, weight: 'bold' } }
+                            },
+                            y_temp: { display: false, min: 0, max: 100 },
+                            y_rain: { display: false, min: 0, max: 100 },
+                            y_wind: { display: false, min: 0, max: 100 }
+                        }
+                    },
+                    plugins: [ChartDataLabels]
+                });
+        }
+
+        loadWeatherChart();
+    </script>
+</body>
+</html>
