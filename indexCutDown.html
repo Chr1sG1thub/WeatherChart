@@ -42,7 +42,7 @@
     <div class="chart-container">
         <canvas id="weatherChart"></canvas>
     </div>
-<!--<p style="text-align: center; font-size: 8pt"><i>La valeur des précipitations affichée à 10h00 (par exemple) correspond aux prévisions de pluie entre 10h00 et 11h00.</i></p>
+<!--<p style="text-align: center; font-size: 8pt"><i>La valeur des précipitations affichée à 10h (par exemple) correspond aux prévisions de pluie entre 10h et 11h.</i></p>
 <p style="text-align: center; font-size: 8pt"><i>Données météorologiques fournies par <a href="https://open-meteo.com">https://open-meteo.com</a></i></p>-->
     
     <script>
@@ -147,7 +147,7 @@ function getCurrentDateTime() {
     
 
             
-            const labels = times.map(t => new Date(t).getHours().toString().padStart(2, '0') + 'h00');
+            const labels = times.map(t => new Date(t).getHours().toString().padStart(2, '0') + 'h');
                 const tempMin = Math.min(...temps);
                 const tempMax = Math.max(...temps);
                 const tempBot = 25;
